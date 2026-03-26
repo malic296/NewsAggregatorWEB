@@ -1,0 +1,15 @@
+{% extends "layouts/auth.html" %}
+{% block title %} Register {% endblock %}
+
+{% block content %}
+
+<h1>REGISTER</h1>
+<form method="POST">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.credential(size=20) }}
+    {{ form.email.label }} {{ form.credential(size=20) }}
+    {{ form.password.label }}
+    <input type="submit" value="register">
+</form>
+
+{% endblock %}
