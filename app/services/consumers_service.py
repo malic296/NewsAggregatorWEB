@@ -1,7 +1,6 @@
 from app.api_client.client import AuthenticatedClient, Client
 from app.api_client.api.consumers import login_latest_consumers_login_post, request_new_registration_latest_consumers_register_request_new_registration_post, verify_email_latest_consumers_register_verify_email_post
-from app.api_client.models import BodyLoginLatestConsumersLoginPost, RegistrationDTO, ResponseDTONoneType
-from .base import handle_api_errors
+from app.api_client.models import BodyLoginLatestConsumersLoginPost, RegistrationDTO
 from typing import Optional
 from app.models import AccessToken
 
