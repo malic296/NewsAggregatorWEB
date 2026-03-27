@@ -1,0 +1,14 @@
+{% extends "layouts/dashboard.html" %}
+{% block title %} Index {% endblock %}
+
+{% block content %}
+
+<h1>CHANNELS</h1>
+<table>
+    <thead><th> Title: </th><th> Link: </th></thead>
+    {% for channel in channels %}
+        <tr><td>{{channel.title}}</td><td>{{channel.link}}</td></tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

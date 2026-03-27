@@ -1,6 +1,5 @@
 from flask import redirect, render_template, url_for, flash, session, g
 from app.api_client.models import RegistrationDTO
-from app.dependencies.services import get_service_container
 from app.forms import LoginForm, RegistrationForm, VerifyForm
 from flask import Blueprint
 
@@ -13,7 +12,7 @@ def login():
         token = g.services.consumers.login_user(form.credential.data, form.password.data)
 
         if token:
-            resp = redirect(url_for('logged.index'))
+            resp = redirect(url_for('logged.news'))
             resp.set_cookie(
                 'access_token',
                 token.access_token,
@@ -50,7 +49,7 @@ def verify():
         if token:
             session.pop("pending_email", None)
 
-            resp = redirect(url_for('logged.index'))
+            resp = redirect(url_for('logged.news'))
             resp.set_cookie(
                 'access_token',
                 token.access_token,
