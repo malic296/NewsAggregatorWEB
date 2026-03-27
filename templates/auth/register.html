@@ -6,9 +6,9 @@
 <h1>REGISTER</h1>
 <form method="POST">
     {{ form.csrf_token }}
-    {{ form.username.label }} {{ form.credential(size=20) }}
-    {{ form.email.label }} {{ form.credential(size=20) }}
-    {{ form.password.label }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    {{ form.email.label }} {{ form.email(size=20) }}
+    {{ form.password.label }} {{ form.password(size=20) }}
     <input type="submit" value="register">
 </form>
 

@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layouts/auth.html" %}
+{% block title %} Register {% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+<h1>VERIFY EMAIL:</h1>
+<form method="POST">
+    {{ form.csrf_token }}
+    {{ form.code.label }} {{ form.code(size=20) }}
+    <input type="submit" value="verify">
+</form>
+
+{% endblock %}

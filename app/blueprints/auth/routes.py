@@ -1,6 +1,7 @@
-from flask import request, redirect, render_template, url_for, flash
+from flask import request, redirect, render_template, url_for, flash, session
+from app.api_client.models import RegistrationDTO
 from app.dependencies.services import get_service_container
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, VerifyForm
 from flask import Blueprint
 
 auth = Blueprint("auth", __name__, template_folder="templates")
@@ -12,18 +13,17 @@ def login():
     if form.validate_on_submit():
 
         services = get_service_container()
-        api_response = services.consumers.login_user(form.credential.data, form.password.data)
+        token = services.consumers.login_user(form.credential.data, form.password.data)
 
-        if api_response.status_code == 200:
-            token = api_response.parsed.access_token
-
+        if token:
             resp = redirect(url_for('logged.index'))
             resp.set_cookie(
                 'access_token',
-                token,
+                token.access_token,
                 httponly=True,
                 secure=False,
-                samesite='Lax'
+                samesite='Lax',
+                max_age=1800
             )
             return resp
 
@@ -35,23 +35,37 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        return render_template("welcome.html", form = form)
         services = get_service_container()
-        api_response = services.consumers.login_user(form.username.data, form.email.data, form.password.data)
+        email_sent = services.consumers.request_new_registration(RegistrationDTO(form.username.data, form.email.data, form.password.data))
+        if email_sent:
+            session["pending_email"] = form.email.data
+            return redirect(url_for('auth.verify'))
 
-        if api_response.status_code == 200:
-            token = api_response.parsed.access_token
+    return render_template("auth/register.html", form = form)
+
+@auth.route("/verify", methods=["GET", "POST"])
+def verify():
+    form = VerifyForm()
+    email = session.get("pending_email")
+    if not email:
+        return redirect(url_for('auth.register'))
+    if form.validate_on_submit():
+        services = get_service_container()
+        token = services.consumers.verify_email(email=email, code=int(form.code.data))
+        if token:
+            session.pop("pending_email", None)
 
             resp = redirect(url_for('logged.index'))
             resp.set_cookie(
                 'access_token',
-                token,
+                token.access_token,
                 httponly=True,
                 secure=False,
-                samesite='Lax'
+                samesite='Lax',
+                max_age=1800
             )
             return resp
 
         flash("Login failed. Please check your credentials.", "danger")
 
-    return render_template("auth/register.html", form = form)
+    return render_template("auth/verify.html", form = form)
