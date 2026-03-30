@@ -5,25 +5,43 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.response_dto_consumer_dto import ResponseDTOConsumerDTO
+from ...models.base_response import BaseResponse
+from ...models.http_validation_error import HTTPValidationError
+from ...models.registration_dto import RegistrationDTO
 from ...types import Response
 
 
-def _get_kwargs() -> dict[str, Any]:
+def _get_kwargs(
+    *,
+    body: RegistrationDTO,
+) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": "/latest/consumers/get_currently_logged_consumer",
+        "method": "post",
+        "url": "/latest/consumers/register/request_new_registration",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> ResponseDTOConsumerDTO | None:
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> BaseResponse | HTTPValidationError | None:
     if response.status_code == 200:
-        response_200 = ResponseDTOConsumerDTO.from_dict(response.json())
+        response_200 = BaseResponse.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 422:
+        response_422 = HTTPValidationError.from_dict(response.json())
+
+        return response_422
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -33,7 +51,7 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[ResponseDTOConsumerDTO]:
+) -> Response[BaseResponse | HTTPValidationError]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -44,19 +62,25 @@ def _build_response(
 
 def sync_detailed(
     *,
-    client: AuthenticatedClient,
-) -> Response[ResponseDTOConsumerDTO]:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+    body: RegistrationDTO,
+) -> Response[BaseResponse | HTTPValidationError]:
+    """Request New Registration
+
+    Args:
+        body (RegistrationDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ResponseDTOConsumerDTO]
+        Response[BaseResponse | HTTPValidationError]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        body=body,
+    )
 
     response = client.get_httpx_client().request(
         **kwargs,
@@ -67,38 +91,49 @@ def sync_detailed(
 
 def sync(
     *,
-    client: AuthenticatedClient,
-) -> ResponseDTOConsumerDTO | None:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+    body: RegistrationDTO,
+) -> BaseResponse | HTTPValidationError | None:
+    """Request New Registration
+
+    Args:
+        body (RegistrationDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ResponseDTOConsumerDTO
+        BaseResponse | HTTPValidationError
     """
 
     return sync_detailed(
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
-    client: AuthenticatedClient,
-) -> Response[ResponseDTOConsumerDTO]:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+    body: RegistrationDTO,
+) -> Response[BaseResponse | HTTPValidationError]:
+    """Request New Registration
+
+    Args:
+        body (RegistrationDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ResponseDTOConsumerDTO]
+        Response[BaseResponse | HTTPValidationError]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        body=body,
+    )
 
     response = await client.get_async_httpx_client().request(**kwargs)
 
@@ -107,20 +142,25 @@ async def asyncio_detailed(
 
 async def asyncio(
     *,
-    client: AuthenticatedClient,
-) -> ResponseDTOConsumerDTO | None:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+    body: RegistrationDTO,
+) -> BaseResponse | HTTPValidationError | None:
+    """Request New Registration
+
+    Args:
+        body (RegistrationDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ResponseDTOConsumerDTO
+        BaseResponse | HTTPValidationError
     """
 
     return (
         await asyncio_detailed(
             client=client,
+            body=body,
         )
     ).parsed

@@ -6,42 +6,32 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ChannelDTO")
+T = TypeVar("T", bound="TokenResponse")
 
 
 @_attrs_define
-class ChannelDTO:
+class TokenResponse:
     """
     Attributes:
-        uuid (str):
-        title (str):
-        link (str):
-        disabled_by_user (bool):
+        access_token (str):
+        token_type (str):
     """
 
-    uuid: str
-    title: str
-    link: str
-    disabled_by_user: bool
+    access_token: str
+    token_type: str
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        uuid = self.uuid
+        access_token = self.access_token
 
-        title = self.title
-
-        link = self.link
-
-        disabled_by_user = self.disabled_by_user
+        token_type = self.token_type
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "uuid": uuid,
-                "title": title,
-                "link": link,
-                "disabled_by_user": disabled_by_user,
+                "access_token": access_token,
+                "token_type": token_type,
             }
         )
 
@@ -50,23 +40,17 @@ class ChannelDTO:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        uuid = d.pop("uuid")
+        access_token = d.pop("access_token")
 
-        title = d.pop("title")
+        token_type = d.pop("token_type")
 
-        link = d.pop("link")
-
-        disabled_by_user = d.pop("disabled_by_user")
-
-        channel_dto = cls(
-            uuid=uuid,
-            title=title,
-            link=link,
-            disabled_by_user=disabled_by_user,
+        token_response = cls(
+            access_token=access_token,
+            token_type=token_type,
         )
 
-        channel_dto.additional_properties = d
-        return channel_dto
+        token_response.additional_properties = d
+        return token_response
 
     @property
     def additional_keys(self) -> list[str]:

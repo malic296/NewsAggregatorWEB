@@ -1,30 +1,28 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="ResponseDTObool")
+T = TypeVar("T", bound="LikeResponse")
 
 
 @_attrs_define
-class ResponseDTObool:
+class LikeResponse:
     """
     Attributes:
         success (bool):
         message (str):
         status_code (int):
-        data (bool | None | Unset):
+        liked (bool):
     """
 
     success: bool
     message: str
     status_code: int
-    data: bool | None | Unset = UNSET
+    liked: bool
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -34,11 +32,7 @@ class ResponseDTObool:
 
         status_code = self.status_code
 
-        data: bool | None | Unset
-        if isinstance(self.data, Unset):
-            data = UNSET
-        else:
-            data = self.data
+        liked = self.liked
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -47,10 +41,9 @@ class ResponseDTObool:
                 "success": success,
                 "message": message,
                 "status_code": status_code,
+                "liked": liked,
             }
         )
-        if data is not UNSET:
-            field_dict["data"] = data
 
         return field_dict
 
@@ -63,24 +56,17 @@ class ResponseDTObool:
 
         status_code = d.pop("status_code")
 
-        def _parse_data(data: object) -> bool | None | Unset:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            return cast(bool | None | Unset, data)
+        liked = d.pop("liked")
 
-        data = _parse_data(d.pop("data", UNSET))
-
-        response_dt_obool = cls(
+        like_response = cls(
             success=success,
             message=message,
             status_code=status_code,
-            data=data,
+            liked=liked,
         )
 
-        response_dt_obool.additional_properties = d
-        return response_dt_obool
+        like_response.additional_properties = d
+        return like_response
 
     @property
     def additional_keys(self) -> list[str]:

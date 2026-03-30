@@ -6,25 +6,21 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
-
-T = TypeVar("T", bound="ResponseDTONoneType")
+T = TypeVar("T", bound="BaseResponse")
 
 
 @_attrs_define
-class ResponseDTONoneType:
+class BaseResponse:
     """
     Attributes:
         success (bool):
         message (str):
         status_code (int):
-        data (None | Unset):
     """
 
     success: bool
     message: str
     status_code: int
-    data: None | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -33,8 +29,6 @@ class ResponseDTONoneType:
         message = self.message
 
         status_code = self.status_code
-
-        data = self.data
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -45,8 +39,6 @@ class ResponseDTONoneType:
                 "status_code": status_code,
             }
         )
-        if data is not UNSET:
-            field_dict["data"] = data
 
         return field_dict
 
@@ -59,17 +51,14 @@ class ResponseDTONoneType:
 
         status_code = d.pop("status_code")
 
-        data = d.pop("data", UNSET)
-
-        response_dto_none_type = cls(
+        base_response = cls(
             success=success,
             message=message,
             status_code=status_code,
-            data=data,
         )
 
-        response_dto_none_type.additional_properties = d
-        return response_dto_none_type
+        base_response.additional_properties = d
+        return base_response
 
     @property
     def additional_keys(self) -> list[str]:

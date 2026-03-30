@@ -5,38 +5,37 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.body_login import BodyLogin
 from ...models.http_validation_error import HTTPValidationError
-from ...types import UNSET, Response
+from ...models.token_response import TokenResponse
+from ...types import Response
 
 
 def _get_kwargs(
     *,
-    email: str,
-    code: int,
+    body: BodyLogin,
 ) -> dict[str, Any]:
-
-    params: dict[str, Any] = {}
-
-    params["email"] = email
-
-    params["code"] = code
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
         "method": "post",
-        "url": "/latest/consumers/register/verify_email",
-        "params": params,
+        "url": "/latest/consumers/login",
     }
 
+    _kwargs["data"] = body.to_dict()
+
+    headers["Content-Type"] = "application/x-www-form-urlencoded"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Any | HTTPValidationError | None:
+) -> HTTPValidationError | TokenResponse | None:
     if response.status_code == 200:
-        response_200 = response.json()
+        response_200 = TokenResponse.from_dict(response.json())
+
         return response_200
 
     if response.status_code == 422:
@@ -52,7 +51,7 @@ def _parse_response(
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Any | HTTPValidationError]:
+) -> Response[HTTPValidationError | TokenResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -64,26 +63,23 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
-    email: str,
-    code: int,
-) -> Response[Any | HTTPValidationError]:
-    """Verify Email
+    body: BodyLogin,
+) -> Response[HTTPValidationError | TokenResponse]:
+    """Login
 
     Args:
-        email (str):
-        code (int):
+        body (BodyLogin):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any | HTTPValidationError]
+        Response[HTTPValidationError | TokenResponse]
     """
 
     kwargs = _get_kwargs(
-        email=email,
-        code=code,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -96,53 +92,47 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient | Client,
-    email: str,
-    code: int,
-) -> Any | HTTPValidationError | None:
-    """Verify Email
+    body: BodyLogin,
+) -> HTTPValidationError | TokenResponse | None:
+    """Login
 
     Args:
-        email (str):
-        code (int):
+        body (BodyLogin):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Any | HTTPValidationError
+        HTTPValidationError | TokenResponse
     """
 
     return sync_detailed(
         client=client,
-        email=email,
-        code=code,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
-    email: str,
-    code: int,
-) -> Response[Any | HTTPValidationError]:
-    """Verify Email
+    body: BodyLogin,
+) -> Response[HTTPValidationError | TokenResponse]:
+    """Login
 
     Args:
-        email (str):
-        code (int):
+        body (BodyLogin):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any | HTTPValidationError]
+        Response[HTTPValidationError | TokenResponse]
     """
 
     kwargs = _get_kwargs(
-        email=email,
-        code=code,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -153,27 +143,24 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient | Client,
-    email: str,
-    code: int,
-) -> Any | HTTPValidationError | None:
-    """Verify Email
+    body: BodyLogin,
+) -> HTTPValidationError | TokenResponse | None:
+    """Login
 
     Args:
-        email (str):
-        code (int):
+        body (BodyLogin):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Any | HTTPValidationError
+        HTTPValidationError | TokenResponse
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            email=email,
-            code=code,
+            body=body,
         )
     ).parsed

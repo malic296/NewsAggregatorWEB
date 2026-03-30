@@ -1,34 +1,32 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
-
-from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.article_dto import ArticleDTO
 
 
-T = TypeVar("T", bound="ResponseDTOlistArticleDTO")
+T = TypeVar("T", bound="ArticlesResponse")
 
 
 @_attrs_define
-class ResponseDTOlistArticleDTO:
+class ArticlesResponse:
     """
     Attributes:
         success (bool):
         message (str):
         status_code (int):
-        data (list[ArticleDTO] | None | Unset):
+        articles (list[ArticleDTO]):
     """
 
     success: bool
     message: str
     status_code: int
-    data: list[ArticleDTO] | None | Unset = UNSET
+    articles: list[ArticleDTO]
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,17 +36,10 @@ class ResponseDTOlistArticleDTO:
 
         status_code = self.status_code
 
-        data: list[dict[str, Any]] | None | Unset
-        if isinstance(self.data, Unset):
-            data = UNSET
-        elif isinstance(self.data, list):
-            data = []
-            for data_type_0_item_data in self.data:
-                data_type_0_item = data_type_0_item_data.to_dict()
-                data.append(data_type_0_item)
-
-        else:
-            data = self.data
+        articles = []
+        for articles_item_data in self.articles:
+            articles_item = articles_item_data.to_dict()
+            articles.append(articles_item)
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -57,10 +48,9 @@ class ResponseDTOlistArticleDTO:
                 "success": success,
                 "message": message,
                 "status_code": status_code,
+                "articles": articles,
             }
         )
-        if data is not UNSET:
-            field_dict["data"] = data
 
         return field_dict
 
@@ -75,37 +65,22 @@ class ResponseDTOlistArticleDTO:
 
         status_code = d.pop("status_code")
 
-        def _parse_data(data: object) -> list[ArticleDTO] | None | Unset:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, list):
-                    raise TypeError()
-                data_type_0 = []
-                _data_type_0 = data
-                for data_type_0_item_data in _data_type_0:
-                    data_type_0_item = ArticleDTO.from_dict(data_type_0_item_data)
+        articles = []
+        _articles = d.pop("articles")
+        for articles_item_data in _articles:
+            articles_item = ArticleDTO.from_dict(articles_item_data)
 
-                    data_type_0.append(data_type_0_item)
+            articles.append(articles_item)
 
-                return data_type_0
-            except (TypeError, ValueError, AttributeError, KeyError):
-                pass
-            return cast(list[ArticleDTO] | None | Unset, data)
-
-        data = _parse_data(d.pop("data", UNSET))
-
-        response_dt_olist_article_dto = cls(
+        articles_response = cls(
             success=success,
             message=message,
             status_code=status_code,
-            data=data,
+            articles=articles,
         )
 
-        response_dt_olist_article_dto.additional_properties = d
-        return response_dt_olist_article_dto
+        articles_response.additional_properties = d
+        return articles_response
 
     @property
     def additional_keys(self) -> list[str]:

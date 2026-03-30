@@ -8,11 +8,11 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="BodyLoginLatestConsumersLoginPost")
+T = TypeVar("T", bound="BodyLogin")
 
 
 @_attrs_define
-class BodyLoginLatestConsumersLoginPost:
+class BodyLogin:
     """
     Attributes:
         username (str):
@@ -111,7 +111,7 @@ class BodyLoginLatestConsumersLoginPost:
 
         client_secret = _parse_client_secret(d.pop("client_secret", UNSET))
 
-        body_login_latest_consumers_login_post = cls(
+        body_login = cls(
             username=username,
             password=password,
             grant_type=grant_type,
@@ -120,8 +120,8 @@ class BodyLoginLatestConsumersLoginPost:
             client_secret=client_secret,
         )
 
-        body_login_latest_consumers_login_post.additional_properties = d
-        return body_login_latest_consumers_login_post
+        body_login.additional_properties = d
+        return body_login
 
     @property
     def additional_keys(self) -> list[str]:

@@ -1,52 +1,45 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
-
-from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.consumer_dto import ConsumerDTO
 
 
-T = TypeVar("T", bound="ResponseDTOConsumerDTO")
+T = TypeVar("T", bound="ConsumersResponse")
 
 
 @_attrs_define
-class ResponseDTOConsumerDTO:
+class ConsumersResponse:
     """
     Attributes:
         success (bool):
         message (str):
         status_code (int):
-        data (ConsumerDTO | None | Unset):
+        consumers (list[ConsumerDTO]):
     """
 
     success: bool
     message: str
     status_code: int
-    data: ConsumerDTO | None | Unset = UNSET
+    consumers: list[ConsumerDTO]
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.consumer_dto import ConsumerDTO
-
         success = self.success
 
         message = self.message
 
         status_code = self.status_code
 
-        data: dict[str, Any] | None | Unset
-        if isinstance(self.data, Unset):
-            data = UNSET
-        elif isinstance(self.data, ConsumerDTO):
-            data = self.data.to_dict()
-        else:
-            data = self.data
+        consumers = []
+        for consumers_item_data in self.consumers:
+            consumers_item = consumers_item_data.to_dict()
+            consumers.append(consumers_item)
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -55,10 +48,9 @@ class ResponseDTOConsumerDTO:
                 "success": success,
                 "message": message,
                 "status_code": status_code,
+                "consumers": consumers,
             }
         )
-        if data is not UNSET:
-            field_dict["data"] = data
 
         return field_dict
 
@@ -73,32 +65,22 @@ class ResponseDTOConsumerDTO:
 
         status_code = d.pop("status_code")
 
-        def _parse_data(data: object) -> ConsumerDTO | None | Unset:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                data_type_0 = ConsumerDTO.from_dict(data)
+        consumers = []
+        _consumers = d.pop("consumers")
+        for consumers_item_data in _consumers:
+            consumers_item = ConsumerDTO.from_dict(consumers_item_data)
 
-                return data_type_0
-            except (TypeError, ValueError, AttributeError, KeyError):
-                pass
-            return cast(ConsumerDTO | None | Unset, data)
+            consumers.append(consumers_item)
 
-        data = _parse_data(d.pop("data", UNSET))
-
-        response_dto_consumer_dto = cls(
+        consumers_response = cls(
             success=success,
             message=message,
             status_code=status_code,
-            data=data,
+            consumers=consumers,
         )
 
-        response_dto_consumer_dto.additional_properties = d
-        return response_dto_consumer_dto
+        consumers_response.additional_properties = d
+        return consumers_response
 
     @property
     def additional_keys(self) -> list[str]:
