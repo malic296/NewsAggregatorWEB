@@ -1,5 +1,5 @@
 from flask import redirect, render_template, url_for, flash, session, g
-from app.api_client.models import RegistrationDTO
+from app.api_client.models import RegistrationDTO, TokenResponse
 from app.forms import LoginForm, RegistrationForm, VerifyForm
 from flask import Blueprint
 
@@ -9,7 +9,7 @@ auth = Blueprint("auth", __name__, template_folder="templates")
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        token = g.services.consumers.login_user(form.credential.data, form.password.data)
+        token: TokenResponse = g.services.consumers.login_user(form.credential.data, form.password.data)
 
         if token:
             resp = redirect(url_for('logged.news'))

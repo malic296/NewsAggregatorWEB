@@ -1,6 +1,6 @@
 from app.api_client.client import AuthenticatedClient
 from app.api_client.models import ChannelDTO
-from app.api_client.api.channels import get_available_channels_latest_channels_get
+from app.api_client.api.channels import read_channels
 
 
 class ChannelsService:
@@ -8,8 +8,8 @@ class ChannelsService:
         self.client = client
 
     def get_all_channels(self) -> list[ChannelDTO]:
-        response = get_available_channels_latest_channels_get.sync_detailed(
+        response = read_channels.sync_detailed(
             client=self.client
         )
 
-        return response.parsed.data
+        return response.parsed.channels

@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, g
 from app.decorators import authorized
-from app.api_client.api.channels import get_available_channels_latest_channels_get
+from app.api_client.api.channels import read_channels
 
 logged = Blueprint("logged", __name__, template_folder="templates")
 
