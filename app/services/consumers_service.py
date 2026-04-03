@@ -1,8 +1,7 @@
 from app.api_client.client import AuthenticatedClient, Client
-from app.api_client.api.consumers import login, request_new_registration, verify_email
-from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse
+from app.api_client.api.consumers import login, request_new_registration, verify_email, get_currently_logged_consumer
+from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse, ConsumerDTO
 from typing import Optional
-from app.models import AccessToken
 
 class ConsumersService:
     def __init__(self, client: AuthenticatedClient | Client):
@@ -50,4 +49,17 @@ class ConsumersService:
         except KeyError:
             return None
 
+    def get_current_user(self) -> ConsumerDTO:
+        if not isinstance(self.client, AuthenticatedClient):
+            raise Exception('This method can be called only with authenticated client.')
+
+        response = get_currently_logged_consumer.sync_detailed(
+            client=self.client
+        )
+
+        if not response.parsed.success:
+            raise Exception("Getting current user failed.")
+
+
+        return response.parsed.consumers[0]
 

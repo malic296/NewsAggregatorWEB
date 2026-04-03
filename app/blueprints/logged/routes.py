@@ -1,12 +1,12 @@
 from flask import render_template, Blueprint, g
 from app.decorators import authorized
-from app.api_client.api.channels import read_channels
 
 logged = Blueprint("logged", __name__, template_folder="templates")
 
 @logged.route("/news", methods=["GET", "POST"])
 @authorized
 def news():
+    #news = g.services.articles.read_articles()
     return render_template("logged/news.html")
 
 @logged.route("/channels", methods=["GET"])
