@@ -1,4 +1,4 @@
-from .filter import FilterForm
+from .filter import FilterForm, ChannelFilterForm
 from .registration import RegistrationForm
 from .login import LoginForm
-from.verify import VerifyForm
+from .verify import VerifyForm

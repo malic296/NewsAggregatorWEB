@@ -12,7 +12,7 @@ def login():
         token: TokenResponse = g.services.consumers.login_user(form.credential.data, form.password.data)
 
         if token:
-            resp = redirect(url_for('logged.news'))
+            resp = redirect(url_for('logged.articles'))
             resp.set_cookie(
                 'access_token',
                 token.access_token,
@@ -49,7 +49,7 @@ def verify():
         if token:
             session.pop("pending_email", None)
 
-            resp = redirect(url_for('logged.news'))
+            resp = redirect(url_for('logged.articles'))
             resp.set_cookie(
                 'access_token',
                 token.access_token,

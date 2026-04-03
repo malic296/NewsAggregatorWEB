@@ -1,0 +1,75 @@
+{% extends "layouts/dashboard.html" %}
+{% block title %} Index {% endblock %}
+
+{% block content %}
+
+<h1>Articles</h1>
+
+<div class="filter-section" style="margin-bottom: 20px; padding: 15px; background: #f4f4f4; border-radius: 8px;">
+    <form method="POST" action="{{ url_for('logged.articles') }}">
+        {{ filter_form.hidden_tag() }}
+
+        <label for="hours">Show articles for last (hours):</label>
+        {{ filter_form.hours(class="form-control", style="width: 80px; display: inline-block;") }}
+
+        <button type="submit" class="btn-filter">Update View</button>
+
+        {% if filter_form.hours.errors %}
+            <div style="color: red;">{{ filter_form.hours.errors[0] }}</div>
+        {% endif %}
+    </form>
+    <p><small>Currently showing articles from the last <strong>{{ current_hours }}</strong> hours.</small></p>
+</div>
+
+<table>
+    <thead><th>Title: </th><th>Link: </th><th>Description: </th><th>Publication Date: </th><th>Channel: </th><th>Likes: </th></thead>
+    <tbody>
+    {% for article in articles %}
+        <tr>
+            <td>{{article.title}}</td>
+            <td>{{article.link}}</td>
+            <td>{{article.description}}</td>
+            <td>{{article.pub_date}}</td>
+            <td>{{article.channel_link}}</td>
+            <td id="like-count-{{article.uuid}}">{{article.likes}}</td>
+            <td>
+                <button class="like-btn {{ 'active' if article.liked_by_user}}" onclick="doLike('{{ article.uuid }}', this)">
+                    <span class="like-icon">
+                        {{ '✖' if article.liked_by_user else '✔' }}
+                    </span>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function doLike(uuid, element) {
+    const url = "{{ url_for('logged.like_article', uuid='PLACEHOLDER') }}".replace('PLACEHOLDER', uuid);
+    const iconSpan = element.querySelector('.like-icon');
+    const countElement = document.getElementById(`like-count-${uuid}`);
+
+    fetch(url, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            let currentCount = parseInt(countElement.innerText);
+
+            if (data.liked) {
+                element.classList.add('active');
+                iconSpan.innerText = '✖';
+                countElement.innerText = currentCount + 1;
+            } else {
+                element.classList.remove('active');
+                iconSpan.innerText = '✔';
+                countElement.innerText = currentCount - 1;
+            }
+        }).catch(err => console.error("Chyba při lajkování:", err));
+}
+</script>
+
+{% endblock %}
