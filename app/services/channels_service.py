@@ -1,6 +1,7 @@
 from app.api_client.client import AuthenticatedClient
 from app.api_client.models import ChannelDTO
 from app.api_client.api.channels import read_channels, set_disabled_channels
+from app.models.errors import ExternalServiceError, RateLimitError
 
 
 class ChannelsService:
@@ -12,8 +13,11 @@ class ChannelsService:
             client=self.client
         )
 
-        if not response.parsed.success:
-            raise Exception("Failed getting all channels.")
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
+
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.status_code}")
 
         return response.parsed.channels
 
@@ -23,6 +27,9 @@ class ChannelsService:
             body=channels_to_disable
         )
 
-        if not response.parsed.success:
-            raise Exception("Failed setting disabled channels.")
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
+
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
 

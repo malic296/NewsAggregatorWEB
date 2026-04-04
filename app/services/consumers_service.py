@@ -2,6 +2,7 @@ from app.api_client.client import AuthenticatedClient, Client
 from app.api_client.api.consumers import login, request_new_registration, verify_email, get_currently_logged_consumer
 from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse, ConsumerDTO
 from typing import Optional
+from app.models.errors import RateLimitError, ExternalServiceError
 
 class ConsumersService:
     def __init__(self, client: AuthenticatedClient | Client):
@@ -18,21 +19,30 @@ class ConsumersService:
             body=form_data
         )
 
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
+
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+
         try:
             return response.parsed
         except KeyError:
             return None
 
     def request_new_registration(self, registration: RegistrationDTO):
-        result = request_new_registration.sync_detailed(
+        response = request_new_registration.sync_detailed(
             client=self.client,
             body=registration
         )
 
-        if result.parsed is not None:
-            if result.parsed.status_code != 200:
-                return False
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
 
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+
+        if response.parsed is not None:
             return True
         else:
             return False
@@ -43,6 +53,12 @@ class ConsumersService:
             email=email,
             code=code
         )
+
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
+
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
 
         try:
             return response.parsed
@@ -57,9 +73,14 @@ class ConsumersService:
             client=self.client
         )
 
-        if not response.parsed.success:
-            raise Exception("Getting current user failed.")
+        if response.parsed.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
 
+        if response.parsed.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
 
-        return response.parsed.consumers[0]
+        try:
+            return response.parsed.consumers[0]
+        except IndexError:
+            raise ExternalServiceError(f"API succeeded but did not return a user for get_current_user.")
 
