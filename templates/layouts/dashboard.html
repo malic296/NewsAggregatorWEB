@@ -2,14 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/pico.min.css">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-<h1>DASHBOARD</h1>
-{% block content %}
-{% endblock %}
+    <header class="container-fluid">
+        <nav>
+            <ul>
+                <li><strong>FedUp</strong></li>
+            </ul>
+            <ul>
+                <li><a href="{{ url_for('logged.articles') }}">Articles</a></li>
+                <li><a href="{{ url_for('logged.channels') }}">Channels</a></li>
+                <li><a href="{{ url_for('auth.profile') }}" role="button">My Profile</a></li>
+                <li><a href="{{ url_for('auth.logout') }}" class="secondary text-decoration-none">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
 
-{% block scripts %}
-{% endblock %}
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block scripts %}
+    {% endblock %}
 </body>
 </html>

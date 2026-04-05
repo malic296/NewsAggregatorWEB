@@ -19,11 +19,11 @@ class ConsumersService:
             body=form_data
         )
 
-        if response.parsed.status_code == 429:
+        if response.status_code == 429:
             raise RateLimitError("API rate limit exceeded")
 
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        if response.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.status_code}")
 
         try:
             return response.parsed
@@ -54,11 +54,11 @@ class ConsumersService:
             code=code
         )
 
-        if response.parsed.status_code == 429:
+        if response.status_code == 429:
             raise RateLimitError("API rate limit exceeded")
 
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        if response.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.status_code}")
 
         try:
             return response.parsed

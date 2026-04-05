@@ -1,49 +1,67 @@
-{% extends "layouts/dashboard.html" %}
-{% block title %} Index {% endblock %}
+{% extends "layouts/logged.html" %} {# Zkontroluj si, jestli se tvůj layout jmenuje logged.html nebo dashboard.html #}
+{% block title %} Articles {% endblock %}
 
 {% block content %}
 
-<h1>Articles</h1>
+<hgroup>
+    <h1>Articles</h1>
+    <p>Currently showing articles from the last <strong>{{ current_hours }}</strong> hours.</p>
+</hgroup>
 
-<div class="filter-section" style="margin-bottom: 20px; padding: 15px; background: #f4f4f4; border-radius: 8px;">
+<article>
     <form method="POST" action="{{ url_for('logged.articles') }}">
         {{ filter_form.hidden_tag() }}
 
         <label for="hours">Show articles for last (hours):</label>
-        {{ filter_form.hours(class="form-control", style="width: 80px; display: inline-block;") }}
 
-        <button type="submit" class="btn-filter">Update View</button>
+        <fieldset role="group">
+            {{ filter_form.hours(placeholder="e.g. 24") }}
+            <input type="submit" value="Update View">
+        </fieldset>
 
         {% if filter_form.hours.errors %}
-            <div style="color: red;">{{ filter_form.hours.errors[0] }}</div>
+            <small style="color: var(--pico-del-color);">{{ filter_form.hours.errors[0] }}</small>
         {% endif %}
     </form>
-    <p><small>Currently showing articles from the last <strong>{{ current_hours }}</strong> hours.</small></p>
+</article>
+
+<div class="overflow-auto">
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Channel</th>
+                <th>Likes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.title }}</td>
+                <td><a href="{{ article.link }}" target="_blank" class="secondary">Open</a></td>
+                <td>{{ article.description[:100] }}...</td>
+                <td>{{ article.pub_date }}</td>
+                <td>{{ article.channel_link }}</td>
+                <td id="like-count-{{ article.uuid }}">{{ article.likes }}</td>
+                <td>
+                    <button
+                        class="outline {{ 'contrast' if article.liked_by_user else 'secondary' }}"
+                        onclick="doLike('{{ article.uuid }}', this)"
+                        style="padding: 2px 10px; margin: 0;">
+                        <span class="like-icon">
+                            {{ '❤️' if article.liked_by_user else '🤍' }}
+                        </span>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-<table>
-    <thead><th>Title: </th><th>Link: </th><th>Description: </th><th>Publication Date: </th><th>Channel: </th><th>Likes: </th></thead>
-    <tbody>
-    {% for article in articles %}
-        <tr>
-            <td>{{article.title}}</td>
-            <td>{{article.link}}</td>
-            <td>{{article.description}}</td>
-            <td>{{article.pub_date}}</td>
-            <td>{{article.channel_link}}</td>
-            <td id="like-count-{{article.uuid}}">{{article.likes}}</td>
-            <td>
-                <button class="like-btn {{ 'active' if article.liked_by_user}}" onclick="doLike('{{ article.uuid }}', this)">
-                    <span class="like-icon">
-                        {{ '✖' if article.liked_by_user else '✔' }}
-                    </span>
-                </button>
-            </td>
-        </tr>
-    {% endfor %}
-
-    </tbody>
-</table>
 
 {% endblock %}
 
@@ -60,16 +78,16 @@ function doLike(uuid, element) {
             let currentCount = parseInt(countElement.innerText);
 
             if (data.liked) {
-                element.classList.add('active');
-                iconSpan.innerText = '✖';
+                element.classList.replace('secondary', 'contrast');
+                iconSpan.innerText = '❤️';
                 countElement.innerText = currentCount + 1;
             } else {
-                element.classList.remove('active');
-                iconSpan.innerText = '✔';
+                element.classList.replace('contrast', 'secondary');
+                iconSpan.innerText = '🤍';
                 countElement.innerText = currentCount - 1;
             }
-        }).catch(err => console.error("Chyba při lajkování:", err));
+        })
+        .catch(err => console.error("Error during like:", err));
 }
 </script>
-
 {% endblock %}

@@ -10,6 +10,7 @@ logged = Blueprint("logged", __name__, template_folder="templates")
 def articles():
     filter_form = FilterForm()
     hours = 1
+    articles = []
 
     if filter_form.validate_on_submit():
         hours = filter_form.hours.data
@@ -20,7 +21,7 @@ def articles():
         else:
             articles = g.services.articles.read_articles(hours=int(hours))
     else:
-        articles = g.services.articles.read_articles()
+        articles = g.services.articles.read_articles(hours=hours)
 
     return render_template("logged/articles.html", articles=articles, filter_form=filter_form, current_hours = hours)
 

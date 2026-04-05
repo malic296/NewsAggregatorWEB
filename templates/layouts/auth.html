@@ -2,11 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/pico.min.css">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-<h1>AUTH</h1>
-{% block content %}
-{% endblock %}
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>FedUp</strong></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('index') }}" role="button">Welcome</a></li>
+            <li><a href="{{ url_for('auth.login') }}" role="button">Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}" role="button">Register</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <article style="padding: 10px; margin-bottom: 20px; border-left: 5px solid var(--pico-primary);">
+                {{ message }}
+              </article>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>
