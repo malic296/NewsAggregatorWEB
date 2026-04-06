@@ -1,93 +1,141 @@
-{% extends "layouts/logged.html" %} {# Zkontroluj si, jestli se tvůj layout jmenuje logged.html nebo dashboard.html #}
-{% block title %} Articles {% endblock %}
+{% extends "layouts/dashboard.html" %}
+{% block title %} Stream zpráv {% endblock %}
 
 {% block content %}
+<section class="section">
+    <div class="container is-max-desktop">
 
-<hgroup>
-    <h1>Articles</h1>
-    <p>Currently showing articles from the last <strong>{{ current_hours }}</strong> hours.</p>
-</hgroup>
+        <div class="level is-mobile mb-6 pb-4">
+            <div class="level-left">
+                <div class="level-item">
+                    <div>
+                        <h1 class="title is-3 has-text-primary is-uppercase mb-1">Stream</h1>
+                        <p class="is-size-7 has-text-grey">
+                            <span class="icon is-small"><i class="fas fa-clock"></i></span>
+                            Posledních {{ current_hours }} hodin
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-<article>
-    <form method="POST" action="{{ url_for('logged.articles') }}">
-        {{ filter_form.hidden_tag() }}
+            <div class="level-right">
+                <div class="level-item">
+                    <form method="POST" action="{{ url_for('logged.articles') }}">
+                        {{ filter_form.hidden_tag() }}
+                        <div class="field has-addons">
+                            <div class="control has-icons-left">
+                                {{ filter_form.hours(class="input is-small is-dark is-rounded") }}
+                                <span class="icon is-small is-left has-text-grey">
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-small is-primary is-rounded is-outlined has-text-weight-bold">
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-        <label for="hours">Show articles for last (hours):</label>
-
-        <fieldset role="group">
-            {{ filter_form.hours(placeholder="e.g. 24") }}
-            <input type="submit" value="Update View">
-        </fieldset>
-
-        {% if filter_form.hours.errors %}
-            <small style="color: var(--pico-del-color);">{{ filter_form.hours.errors[0] }}</small>
+        {% if not articles %}
+        <div class="notification is-dark has-text-centered is-outlined py-6">
+            <span class="icon is-large has-text-grey-dark"><i class="fas fa-layer-group fa-2x"></i></span>
+            <p class="has-text-grey mt-3">Zatím žádné nové zprávy. Zkuste zvýšit časový rozsah.</p>
+        </div>
         {% endif %}
-    </form>
-</article>
 
-<div class="overflow-auto">
-    <table class="striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Link</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Channel</th>
-                <th>Likes</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.title }}</td>
-                <td><a href="{{ article.link }}" target="_blank" class="secondary">Open</a></td>
-                <td>{{ article.description[:100] }}...</td>
-                <td>{{ article.pub_date }}</td>
-                <td>{{ article.channel_link }}</td>
-                <td id="like-count-{{ article.uuid }}">{{ article.likes }}</td>
-                <td>
-                    <button
-                        class="outline {{ 'contrast' if article.liked_by_user else 'secondary' }}"
-                        onclick="doLike('{{ article.uuid }}', this)"
-                        style="padding: 2px 10px; margin: 0;">
-                        <span class="like-icon">
-                            {{ '❤️' if article.liked_by_user else '🤍' }}
-                        </span>
-                    </button>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+        <div class="article-stream">
+            {% for article in articles %}
+            <div class="article-item mb-5 pb-5">
+                <div class="columns is-mobile">
 
+                    <div class="column is-narrow has-text-centered">
+                        <button class="button is-ghost p-0 has-text-grey {{ 'has-text-primary' if article.liked_by_user }}"
+                                onclick="doLike('{{ article.uuid }}', this)">
+                            <span class="icon is-small"><i class="{{ 'fas' if article.liked_by_user else 'far' }} fa-heart"></i></span>
+                            <div class="is-size-7 like-count" id="like-count-{{ article.uuid }}">{{ article.likes }}</div>
+                        </button>
+                    </div>
+
+                    <div class="column">
+                        <div class="is-flex is-align-items-center mb-1">
+                            <span class="tag is-dark is-rounded is-small mr-2 has-text-primary">{{ article.channel_link }}</span>
+                            <span class="is-size-7 has-text-grey">{{ article.pub_date.strftime('%d.%m.%Y %H:%M') }}</span>
+                        </div>
+
+                        <h2 class="title is-5 mb-2">
+                            <a href="{{ article.link }}" target="_blank" class="has-text-white-ter is-block">
+                                {{ article.title }}
+                            </a>
+                        </h2>
+
+                        <div class="is-flex is-align-items-center">
+                            <button class="button is-ghost is-small p-0 has-text-grey mr-4 js-expand-btn">
+                                <span class="icon is-small"><i class="fas fa-align-left"></i></span>
+                                <span>Zobrazit popis</span>
+                            </button>
+
+                            <a href="{{ article.link }}" target="_blank" class="button is-ghost is-small p-0 has-text-grey">
+                                <span class="icon is-small"><i class="fas fa-external-link-alt"></i></span>
+                                <span>Otevřít zdroj</span>
+                            </a>
+                        </div>
+
+                        <div class="is-hidden mt-4 has-text-grey-light is-size-6 content"">
+                            {{ article.description | striptags }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block scripts %}
 <script>
 function doLike(uuid, element) {
     const url = "{{ url_for('logged.like_article', uuid='PLACEHOLDER') }}".replace('PLACEHOLDER', uuid);
-    const iconSpan = element.querySelector('.like-icon');
-    const countElement = document.getElementById(`like-count-${uuid}`);
+    const icon = element.querySelector('i');
+    const countElement = element.querySelector('.like-count');
 
     fetch(url, { method: 'POST' })
         .then(res => res.json())
         .then(data => {
             let currentCount = parseInt(countElement.innerText);
-
             if (data.liked) {
-                element.classList.replace('secondary', 'contrast');
-                iconSpan.innerText = '❤️';
+                element.classList.add('has-text-primary');
+                icon.classList.replace('far', 'fas');
                 countElement.innerText = currentCount + 1;
             } else {
-                element.classList.replace('contrast', 'secondary');
-                iconSpan.innerText = '🤍';
+                element.classList.remove('has-text-primary');
+                icon.classList.replace('fas', 'far');
                 countElement.innerText = currentCount - 1;
             }
         })
-        .catch(err => console.error("Error during like:", err));
+        .catch(err => console.error("Error:", err));
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.js-expand-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parentColumn = btn.closest('.column');
+            const description = parentColumn.querySelector('.is-hidden, .content');
+            const btnText = btn.querySelector('span:not(.icon)');
+
+            if (description.classList.contains('is-hidden')) {
+                description.classList.remove('is-hidden');
+                btnText.innerText = 'Skrýt popis';
+            } else {
+                description.classList.add('is-hidden');
+                btnText.innerText = 'Zobrazit popis';
+            }
+        });
+    });
+});
 </script>
 {% endblock %}

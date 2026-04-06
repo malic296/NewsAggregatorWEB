@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, g
 from app.blueprints import logged, auth
 from app.dependencies.services import get_service_container
 from app.dependencies import register_error_handlers
@@ -11,7 +11,7 @@ def create_app():
 
     app.register_blueprint(logged)
     app.register_blueprint(auth)
-    register_error_handlers(app)
+    #register_error_handlers(app)
 
 
     @app.before_request

@@ -4,13 +4,21 @@ from app.forms import FilterForm, ChannelFilterForm
 
 logged = Blueprint("logged", __name__, template_folder="templates")
 
+@logged.route("/profile", methods=["GET", "POST"])
+@authorized
+def profile():
+    return render_template("logged/profile.html")
+
+@logged.route("/logout", methods=["GET", "POST"])
+@authorized
+def logout():
+    return render_template("auth/welcome.html")
 
 @logged.route("/articles", methods=["GET", "POST"])
 @authorized
 def articles():
     filter_form = FilterForm()
     hours = 1
-    articles = []
 
     if filter_form.validate_on_submit():
         hours = filter_form.hours.data
@@ -23,6 +31,7 @@ def articles():
     else:
         articles = g.services.articles.read_articles(hours=hours)
 
+    articles.sort(key=lambda x: x.likes, reverse=True)
     return render_template("logged/articles.html", articles=articles, filter_form=filter_form, current_hours = hours)
 
 @logged.route("/like_article/<uuid>", methods=["POST"])
