@@ -19,10 +19,6 @@ def create_app():
         if "services" not in g:
             g.services = get_service_container()
 
-    @app.route('/')
-    def index():
-        return render_template('auth/welcome.html')
-
     return app
 
 if __name__ == "__main__":

@@ -1,33 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs" data-theme="dark" class="has-background-black-ter">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/css/pico.min.css">
-    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>{% block title %}{% endblock %} | FedUp</title>
 </head>
-<body>
-    <nav class="container-fluid">
-        <ul>
-            <li><strong>FedUp</strong></li>
-        </ul>
-        <ul>
-            <li><a href="{{ url_for('index') }}" role="button">Welcome</a></li>
-            <li><a href="{{ url_for('auth.login') }}" role="button">Login</a></li>
-            <li><a href="{{ url_for('auth.register') }}" role="button">Register</a></li>
-        </ul>
+<body class="has-background-black-ter">
+    <nav class="navbar is-black is-spaced has-shadow" role="navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{{ url_for('auth.index') }}">
+                    <span class="title is-4 has-text-primary is-uppercase">FedUp</span>
+                </a>
+            </div>
+
+            <div class="navbar-menu is-active">
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a href="{{ url_for('auth.index') }}" class="button is-dark is-primary is-outlined">
+                                <span class="icon"><i class="fas fa-home"></i></span>
+                                <span>Vítejte</span>
+                            </a>
+                            <a href="{{ url_for('auth.login') }}" class="button is-dark is-primary is-outlined">
+                                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                                <span>Přihlášení</span>
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="button is-dark is-primary is-outlined">
+                                <span class="icon"><i class="fas fa-user-plus"></i></span>
+                                <span>Registrace</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
 
-    <main class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <article style="padding: 10px; margin-bottom: 20px; border-left: 5px solid var(--pico-primary);">
-                {{ message }}
-              </article>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <main>
+        <div class="container mt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="notification is-primary is-light is-outlined">
+                    <button class="delete"></button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        </div>
 
         {% block content %}{% endblock %}
     </main>
