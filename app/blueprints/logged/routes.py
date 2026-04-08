@@ -12,7 +12,7 @@ def profile():
 @logged.route("/logout", methods=["GET", "POST"])
 @authorized
 def logout():
-    return render_template("auth/welcome.html")
+    return redirect(url_for("auth.index"))
 
 @logged.route("/articles", methods=["GET", "POST"])
 @authorized

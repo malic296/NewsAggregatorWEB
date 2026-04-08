@@ -5,14 +5,14 @@
 <section class="section">
     <div class="container is-max-desktop">
 
-        <div class="level is-mobile mb-6 pb-4">
+        <div class="level is-mobile mb-6 pb-5" style="border-bottom: 1px solid #333;">
             <div class="level-left">
                 <div class="level-item">
                     <div>
                         <h1 class="title is-3 has-text-primary is-uppercase mb-1">Stream</h1>
                         <p class="is-size-7 has-text-grey">
                             <span class="icon is-small"><i class="fas fa-clock"></i></span>
-                            Posledních {{ current_hours }} hodin
+                            Aktuální výpis zpráv
                         </p>
                     </div>
                 </div>
@@ -20,19 +20,39 @@
 
             <div class="level-right">
                 <div class="level-item">
+                    <div class="field">
+                        <label class="control-label">Seřadit podle</label>
+                        <div class="control has-icons-left">
+                            <div class="select is-small is-rounded is-dark">
+                                <select id="sort-selector">
+                                    <option value="likes">Počet Liků</option>
+                                    <option value="timestamp">Nejnovější</option>
+                                </select>
+                            </div>
+                            <div class="icon is-small is-left has-text-primary">
+                                <i class="fas fa-sort"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-item">
                     <form method="POST" action="{{ url_for('logged.articles') }}">
                         {{ filter_form.hidden_tag() }}
-                        <div class="field has-addons">
-                            <div class="control has-icons-left">
-                                {{ filter_form.hours(class="input is-small is-dark is-rounded") }}
-                                <span class="icon is-small is-left has-text-grey">
-                                    <i class="fas fa-filter"></i>
-                                </span>
-                            </div>
-                            <div class="control">
-                                <button type="submit" class="button is-small is-primary is-rounded is-outlined has-text-weight-bold">
-                                    OK
-                                </button>
+                        <div class="field">
+                            <label class="control-label">Historie (hod)</label>
+                            <div class="field has-addons">
+                                <div class="control has-icons-left" style="width: 80px;">
+                                    {{ filter_form.hours(class="input is-small is-dark is-rounded", placeholder="Hodiny") }}
+                                    <span class="icon is-small is-left has-text-grey">
+                                        <i class="fas fa-filter"></i>
+                                    </span>
+                                </div>
+                                <div class="control">
+                                    <button type="submit" class="button is-small is-primary is-rounded is-outlined has-text-weight-bold">
+                                        OK
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -43,36 +63,35 @@
         {% if not articles %}
         <div class="notification is-dark has-text-centered is-outlined py-6">
             <span class="icon is-large has-text-grey-dark"><i class="fas fa-layer-group fa-2x"></i></span>
-            <p class="has-text-grey mt-3">Zatím žádné nové zprávy. Zkuste zvýšit časový rozsah.</p>
+            <p class="has-text-grey mt-3">Zatím žádné zprávy pro toto období. Zkuste zvýšit rozsah hodin.</p>
         </div>
         {% endif %}
 
         <div class="article-stream">
             {% for article in articles %}
-            <div class="article-item mb-5 pb-5">
-                <div class="columns is-mobile">
+            <div class="article-item mb-5 pb-5"
+                 data-likes="{{ article.likes }}"
+                 data-timestamp="{{ article.pub_date.timestamp() }}"
+                 style="border-bottom: 1px solid #222;">
 
-                    <div class="column is-narrow has-text-centered">
+                <div class="columns is-mobile">
+                    <div class="column is-narrow has-text-centered px-4">
                         <button class="button is-ghost p-0 has-text-grey {{ 'has-text-primary' if article.liked_by_user }}"
                                 onclick="doLike('{{ article.uuid }}', this)">
-                            <span class="icon is-small"><i class="{{ 'fas' if article.liked_by_user else 'far' }} fa-heart"></i></span>
-                            <div class="is-size-7 like-count" id="like-count-{{ article.uuid }}">{{ article.likes }}</div>
+                            <span class="icon"><i class="{{ 'fas' if article.liked_by_user else 'far' }} fa-heart fa-lg"></i></span>
+                            <div class="is-size-7 like-count has-text-weight-bold" id="like-count-{{ article.uuid }}">{{ article.likes }}</div>
                         </button>
                     </div>
 
                     <div class="column">
                         <div class="is-flex is-align-items-center mb-1">
                             <span class="tag is-dark is-rounded is-small mr-2 has-text-primary">{{ article.channel_link }}</span>
-                            <span class="is-size-7 has-text-grey">{{ article.pub_date.strftime('%d.%m.%Y %H:%M') }}</span>
+                            <span class="is-size-7 has-text-grey-light">{{ article.pub_date.strftime('%d.%m.%Y %H:%M') }}</span>
                         </div>
 
-                        <h2 class="title is-5 mb-2">
-                            <a href="{{ article.link }}" target="_blank" class="has-text-white-ter is-block">
-                                {{ article.title }}
-                            </a>
-                        </h2>
+                        <h2 class="title is-5 mb-2">{{ article.title }}</h2>
 
-                        <div class="is-flex is-align-items-center">
+                        <div class="buttons">
                             <button class="button is-ghost is-small p-0 has-text-grey mr-4 js-expand-btn">
                                 <span class="icon is-small"><i class="fas fa-align-left"></i></span>
                                 <span>Zobrazit popis</span>
@@ -80,11 +99,11 @@
 
                             <a href="{{ article.link }}" target="_blank" class="button is-ghost is-small p-0 has-text-grey">
                                 <span class="icon is-small"><i class="fas fa-external-link-alt"></i></span>
-                                <span>Otevřít zdroj</span>
+                                <span>Otevřít článek</span>
                             </a>
                         </div>
 
-                        <div class="is-hidden mt-4 has-text-grey-light is-size-6 content"">
+                        <div class="is-hidden mt-4 has-text-grey-light is-size-6 content box is-dark" style="background-color: #1a1a1a; border: 1px solid #333;">
                             {{ article.description | striptags }}
                         </div>
                     </div>
@@ -102,6 +121,7 @@ function doLike(uuid, element) {
     const url = "{{ url_for('logged.like_article', uuid='PLACEHOLDER') }}".replace('PLACEHOLDER', uuid);
     const icon = element.querySelector('i');
     const countElement = element.querySelector('.like-count');
+    const articleItem = element.closest('.article-item');
 
     fetch(url, { method: 'POST' })
         .then(res => res.json())
@@ -110,32 +130,50 @@ function doLike(uuid, element) {
             if (data.liked) {
                 element.classList.add('has-text-primary');
                 icon.classList.replace('far', 'fas');
-                countElement.innerText = currentCount + 1;
+                currentCount++;
             } else {
                 element.classList.remove('has-text-primary');
                 icon.classList.replace('fas', 'far');
-                countElement.innerText = currentCount - 1;
+                currentCount--;
             }
+
+            countElement.innerText = currentCount;
+            articleItem.dataset.likes = currentCount;
         })
         .catch(err => console.error("Error:", err));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
     document.querySelectorAll('.js-expand-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const parentColumn = btn.closest('.column');
-            const description = parentColumn.querySelector('.is-hidden, .content');
+            const description = parentColumn.querySelector('.content');
             const btnText = btn.querySelector('span:not(.icon)');
 
-            if (description.classList.contains('is-hidden')) {
-                description.classList.remove('is-hidden');
-                btnText.innerText = 'Skrýt popis';
-            } else {
-                description.classList.add('is-hidden');
-                btnText.innerText = 'Zobrazit popis';
-            }
+            description.classList.toggle('is-hidden');
+            btnText.innerText = description.classList.contains('is-hidden') ? 'Zobrazit popis' : 'Skrýt popis';
         });
     });
+
+    const sortSelector = document.getElementById('sort-selector');
+    if (sortSelector) {
+        sortSelector.addEventListener('change', function() {
+            const stream = document.querySelector('.article-stream');
+            const articles = Array.from(stream.querySelectorAll('.article-item'));
+            const sortBy = this.value;
+
+            articles.sort((a, b) => {
+                if (sortBy === 'likes') {
+                    return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+                } else {
+                    return parseFloat(b.dataset.timestamp) - parseFloat(a.dataset.timestamp);
+                }
+            });
+
+            articles.forEach(article => stream.appendChild(article));
+        });
+    }
 });
 </script>
 {% endblock %}
