@@ -3,10 +3,10 @@ from typing import Any
 
 import httpx
 
-from ... import errors
-from ...client import AuthenticatedClient, Client
-from ...models.article_dto import ArticleDTO
-from ...types import Response
+from app.api_client import errors
+from app.api_client.client import AuthenticatedClient, Client
+from app.api_client.models import ArticleDTO
+from app.api_client.types import Response
 
 
 def _get_kwargs() -> dict[str, Any]:

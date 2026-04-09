@@ -12,6 +12,7 @@ from .http_validation_error import HTTPValidationError
 from .like_response import LikeResponse
 from .registration_dto import RegistrationDTO
 from .token_response import TokenResponse
+from .update_credentials_dto import UpdateCredentialsDTO
 from .validation_error import ValidationError
 from .validation_error_context import ValidationErrorContext
 
@@ -28,6 +29,7 @@ __all__ = (
     "LikeResponse",
     "RegistrationDTO",
     "TokenResponse",
+    "UpdateCredentialsDTO",
     "ValidationError",
     "ValidationErrorContext",
 )

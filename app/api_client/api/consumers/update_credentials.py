@@ -5,27 +5,24 @@ import httpx
 
 from app.api_client import errors
 from app.api_client.client import AuthenticatedClient, Client
-from app.api_client.models.base_response import BaseResponse
-from app.api_client.models import ChannelDTO
 from app.api_client.models import HTTPValidationError
+from app.api_client.models.token_response import TokenResponse
+from app.api_client.models.update_credentials_dto import UpdateCredentialsDTO
 from app.api_client.types import Response
 
 
 def _get_kwargs(
     *,
-    body: list[ChannelDTO],
+    body: UpdateCredentialsDTO,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/latest/channels/set_disabled_channels",
+        "method": "put",
+        "url": "/latest/consumers/update_credentials",
     }
 
-    _kwargs["json"] = []
-    for body_item_data in body:
-        body_item = body_item_data.to_dict()
-        _kwargs["json"].append(body_item)
+    _kwargs["json"] = body.to_dict()
 
     headers["Content-Type"] = "application/json"
 
@@ -35,9 +32,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> BaseResponse | HTTPValidationError | None:
+) -> HTTPValidationError | TokenResponse | None:
     if response.status_code == 200:
-        response_200 = BaseResponse.from_dict(response.json())
+        response_200 = TokenResponse.from_dict(response.json())
 
         return response_200
 
@@ -54,7 +51,7 @@ def _parse_response(
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[BaseResponse | HTTPValidationError]:
+) -> Response[HTTPValidationError | TokenResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -66,19 +63,19 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    body: list[ChannelDTO],
-) -> Response[BaseResponse | HTTPValidationError]:
-    """Set Disabled Channels
+    body: UpdateCredentialsDTO,
+) -> Response[HTTPValidationError | TokenResponse]:
+    """Update Credentials
 
     Args:
-        body (list[ChannelDTO]):
+        body (UpdateCredentialsDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[BaseResponse | HTTPValidationError]
+        Response[HTTPValidationError | TokenResponse]
     """
 
     kwargs = _get_kwargs(
@@ -95,19 +92,19 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    body: list[ChannelDTO],
-) -> BaseResponse | HTTPValidationError | None:
-    """Set Disabled Channels
+    body: UpdateCredentialsDTO,
+) -> HTTPValidationError | TokenResponse | None:
+    """Update Credentials
 
     Args:
-        body (list[ChannelDTO]):
+        body (UpdateCredentialsDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        BaseResponse | HTTPValidationError
+        HTTPValidationError | TokenResponse
     """
 
     return sync_detailed(
@@ -119,19 +116,19 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    body: list[ChannelDTO],
-) -> Response[BaseResponse | HTTPValidationError]:
-    """Set Disabled Channels
+    body: UpdateCredentialsDTO,
+) -> Response[HTTPValidationError | TokenResponse]:
+    """Update Credentials
 
     Args:
-        body (list[ChannelDTO]):
+        body (UpdateCredentialsDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[BaseResponse | HTTPValidationError]
+        Response[HTTPValidationError | TokenResponse]
     """
 
     kwargs = _get_kwargs(
@@ -146,19 +143,19 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    body: list[ChannelDTO],
-) -> BaseResponse | HTTPValidationError | None:
-    """Set Disabled Channels
+    body: UpdateCredentialsDTO,
+) -> HTTPValidationError | TokenResponse | None:
+    """Update Credentials
 
     Args:
-        body (list[ChannelDTO]):
+        body (UpdateCredentialsDTO):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        BaseResponse | HTTPValidationError
+        HTTPValidationError | TokenResponse
     """
 
     return (

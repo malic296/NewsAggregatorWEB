@@ -3,12 +3,12 @@ from typing import Any
 
 import httpx
 
-from ... import errors
-from ...client import AuthenticatedClient, Client
-from ...models.base_response import BaseResponse
-from ...models.http_validation_error import HTTPValidationError
-from ...models.registration_dto import RegistrationDTO
-from ...types import Response
+from app.api_client import errors
+from app.api_client.client import AuthenticatedClient, Client
+from app.api_client.models.base_response import BaseResponse
+from app.api_client.models import HTTPValidationError
+from app.api_client.models.registration_dto import RegistrationDTO
+from app.api_client.types import Response
 
 
 def _get_kwargs(
