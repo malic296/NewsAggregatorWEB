@@ -1,6 +1,6 @@
 from app.api_client.client import AuthenticatedClient, Client
-from app.api_client.api.consumers import login, request_new_registration, verify_email, get_currently_logged_consumer
-from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse, ConsumerDTO
+from app.api_client.api.consumers import login, request_new_registration, verify_email, get_currently_logged_consumer, update_credentials
+from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse, ConsumerDTO, UpdateCredentialsDTO
 from typing import Optional
 from app.models.errors import RateLimitError, ExternalServiceError
 
@@ -83,4 +83,24 @@ class ConsumersService:
             return response.parsed.consumers[0]
         except IndexError:
             raise ExternalServiceError(f"API succeeded but did not return a user for get_current_user.")
+
+    def update_credentials(self, credentials: UpdateCredentialsDTO):
+        if not isinstance(self.client, AuthenticatedClient):
+            raise Exception('This method can be called only with authenticated client.')
+
+        response = update_credentials.sync_detailed(
+            client=self.client,
+            body=credentials
+        )
+
+        if response.status_code == 429:
+            raise RateLimitError("API rate limit exceeded")
+
+        if response.status_code != 200:
+            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+
+        try:
+            return response.parsed
+        except KeyError:
+            return None
 

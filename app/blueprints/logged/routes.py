@@ -1,18 +1,60 @@
 from flask import render_template, Blueprint, g, request, redirect, url_for
+
+from app.api_client.models import UpdateCredentialsDTO, TokenResponse
 from app.decorators import authorized
-from app.forms import FilterForm, ChannelFilterForm
+from app.forms import FilterForm, ChannelFilterForm, CredentialsForm
 
 logged = Blueprint("logged", __name__, template_folder="templates")
 
 @logged.route("/profile", methods=["GET", "POST"])
 @authorized
 def profile():
-    return render_template("logged/profile.html")
+    form = CredentialsForm()
+
+    if form.validate_on_submit():
+        req = UpdateCredentialsDTO(old_password=form.old_password.data)
+        if form.new_username.data:
+            req.new_username = form.new_username.data
+
+        if form.new_password.data:
+            req.new_password = form.new_password.data
+
+        token: TokenResponse = g.services.consumers.update_credentials(req)
+
+        if token:
+            resp = redirect(url_for("logged.profile"))
+            resp.delete_cookie(
+                'access_token',
+                httponly=True,
+                secure=False,
+                samesite='Lax'
+            )
+
+            resp.set_cookie(
+                "access_token",
+                token.access_token,
+                httponly=True,
+                secure=False,
+                samesite='Lax',
+                max_age=1800
+            )
+
+            return resp
+
+    user = g.services.consumers.get_current_user()
+    return render_template("logged/profile.html", user=user, form=form)
 
 @logged.route("/logout", methods=["GET", "POST"])
 @authorized
 def logout():
-    return redirect(url_for("auth.index"))
+    resp = redirect(url_for("auth.index"))
+    resp.delete_cookie(
+        'access_token',
+        httponly=True,
+        secure=False,
+        samesite='Lax'
+    )
+    return resp
 
 @logged.route("/articles", methods=["GET", "POST"])
 @authorized

@@ -1,10 +1,90 @@
 {% extends "layouts/dashboard.html" %}
-{% block title %} Články {% endblock %}
+{% block title %} Profile Settings {% endblock %}
 
 {% block content %}
 <section class="section">
     <div class="container">
-        profile
+        <h1 class="title">User Profile</h1>
+        <hr>
+
+        <div class="columns">
+            <div class="column is-4">
+                <div class="box">
+                    <h3 class="subtitle is-5">Current Information</h3>
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>UUID:</strong> <small class="has-text-grey">{{ user.uuid }}</small></p>
+                </div>
+            </div>
+
+            <div class="column is-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="notification is-{{ 'danger' if category == 'error' else 'success' }} is-light">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="box">
+                    <h3 class="subtitle is-5">Update Credentials</h3>
+                    <form method="POST" action="{{ url_for('logged.profile') }}">
+                        {{ form.hidden_tag() }}
+
+                        <div class="field">
+                            <label class="label">Current Password <span class="has-text-danger">*</span></label>
+                            <div class="control has-icons-left">
+                                {{ form.old_password(class="input", placeholder="Confirm current password to save changes") }}
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </div>
+                            <p class="help">Required to authorize any changes.</p>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">New Username</label>
+                                    <div class="control">
+                                        {{ form.new_username(class="input", placeholder="Leave blank to keep current") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">New Password</label>
+                                    <div class="control">
+                                        {{ form.new_password(class="input", placeholder="Enter new password") }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Confirm New Password</label>
+                                    <div class="control">
+                                        {{ form.new_password_integrity(class="input", placeholder="Repeat new password") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field mt-5">
+                            <div class="control">
+                                <button type="submit" class="button is-primary is-fullwidth">
+                                    <strong>Update Credentials</strong>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}
