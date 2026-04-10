@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, g, request, redirect, url_for
+from flask import render_template, Blueprint, g, request, redirect, url_for, flash
 
 from app.api_client.models import UpdateCredentialsDTO, TokenResponse
 from app.decorators import authorized
@@ -63,7 +63,11 @@ def articles():
     hours = 1
 
     if filter_form.validate_on_submit():
-        hours = filter_form.hours.data
+        try:
+            hours = int(filter_form.hours.data)
+        except Exception:
+            flash("Hours must be in integer format", "error")
+            hours = 1
         if not hours or int(hours) < 1:
             filter_form.hours.errors.append("Hours must be set to 1 or greater.")
             articles = g.services.articles.read_articles()

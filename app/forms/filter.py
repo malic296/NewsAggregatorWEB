@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SubmitField
+from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 class FilterForm(FlaskForm):
-    hours = IntegerField("Hours", validators=[DataRequired()])
+    hours = StringField("Hours", validators=[DataRequired()])
 
 class ChannelFilterForm(FlaskForm):
     submit = SubmitField("Save")
