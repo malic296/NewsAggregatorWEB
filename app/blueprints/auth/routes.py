@@ -1,9 +1,8 @@
-from flask import redirect, render_template, url_for, flash, session, g
+from flask import redirect, render_template, url_for, flash, session
 from app.api_client.models import RegistrationDTO, TokenResponse
-from app.forms import LoginForm, RegistrationForm, VerifyForm
-from flask import Blueprint
-
-auth = Blueprint("auth", __name__, template_folder="templates")
+from dependencies.services import get_services
+from .forms import LoginForm, RegistrationForm, VerifyForm
+from . import auth
 
 @auth.route('/')
 def index():
@@ -12,9 +11,10 @@ def index():
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
+    services = get_services()
     form = LoginForm()
     if form.validate_on_submit():
-        token: TokenResponse = g.services.consumers.login_user(form.credential.data, form.password.data)
+        token: TokenResponse = services.consumers.login_user(form.credential.data, form.password.data)
 
         if token:
             resp = redirect(url_for('logged.articles'))
@@ -34,9 +34,10 @@ def login():
 
 @auth.route("/register", methods=["GET", "POST"])
 def register():
+    services = get_services()
     form = RegistrationForm()
     if form.validate_on_submit():
-        email_sent = g.services.consumers.request_new_registration(RegistrationDTO(form.username.data, form.email.data, form.password.data))
+        email_sent = services.consumers.request_new_registration(RegistrationDTO(form.username.data, form.email.data, form.password.data))
         if email_sent:
             session["pending_email"] = form.email.data
             return redirect(url_for('auth.verify'))
@@ -45,12 +46,13 @@ def register():
 
 @auth.route("/verify", methods=["GET", "POST"])
 def verify():
+    services = get_services()
     form = VerifyForm()
     email = session.get("pending_email")
     if not email:
         return redirect(url_for('auth.register'))
     if form.validate_on_submit():
-        token = g.services.consumers.verify_email(email=email, code=int(form.code.data))
+        token = services.consumers.verify_email(email=email, code=int(form.code.data))
         if token:
             session.pop("pending_email", None)
 

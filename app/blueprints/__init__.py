@@ -1,2 +1,2 @@
-from .auth.routes import auth
-from .logged.routes import logged
+from .auth import auth
+from .logged import logged
