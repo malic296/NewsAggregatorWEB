@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, TypeVar, cast
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from app.api_client.types import UNSET, Unset
+from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.validation_error_context import ValidationErrorContext

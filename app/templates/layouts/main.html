@@ -12,7 +12,7 @@
     <nav class="navbar is-black is-spaced has-shadow" role="navigation">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item" href="{{ url_for('logged.articles') }}">
+                <a class="navbar-item" href="{{ url_for('main.articles') }}">
                     <span class="title is-4 has-text-primary is-uppercase">FedUp</span>
                 </a>
             </div>
@@ -21,11 +21,11 @@
                 <div class="navbar-start">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a href="{{ url_for('logged.articles') }}" class="button is-dark is-primary is-outlined">
+                            <a href="{{ url_for('main.articles') }}" class="button is-dark is-primary is-outlined">
                                 <span class="icon"><i class="fas fa-newspaper"></i></span>
                                 <span>Články</span>
                             </a>
-                            <a href="{{ url_for('logged.channels') }}" class="button is-dark is-primary is-outlined">
+                            <a href="{{ url_for('main.channels') }}" class="button is-dark is-primary is-outlined">
                                 <span class="icon"><i class="fas fa-rss"></i></span>
                                 <span>Kanály</span>
                             </a>
@@ -36,11 +36,11 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a href="{{ url_for('logged.profile') }}" class="button is-dark is-primary is-outlined">
+                            <a href="{{ url_for('user.profile') }}" class="button is-dark is-primary is-outlined">
                                 <span class="icon"><i class="fas fa-user-circle"></i></span>
                                 <span>Můj profil</span>
                             </a>
-                            <a href="{{ url_for('logged.logout') }}" class="button is-dark is-danger is-outlined">
+                            <a href="{{ url_for('user.logout') }}" class="button is-dark is-danger is-outlined">
                                 <span class="icon"><i class="fas fa-power-off"></i></span>
                                 <span>Odhlásit</span>
                             </a>
@@ -68,6 +68,27 @@
         {% block content %}{% endblock %}
     </main>
 
-    {% block scripts %}{% endblock %}
+    <div id="share-modal" class="modal">
+          <div class="modal-background" onclick="closeShareModal()"></div>
+              <div class="modal-content is-small">
+                    <div class="box has-background-grey-darker">
+                        <h3 class="title is-6 has-text-grey-light is-uppercase mb-3">Sdílet zprávu</h3>
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                <input id="share-link-input" class="input is-dark has-text-white" type="text" readonly style="background: #1e1f22; border-color: #000;">
+                            </div>
+                            <div class="control">
+                                <button id="copy-btn" class="button is-link has-text-weight-bold" onclick="copyShareLink()">Kopírovat</button>
+                            </div>
+                        </div>
+                        <p id="copy-feedback" class="is-size-7 has-text-success mt-2 is-hidden">Odkaz byl zkopírován!</p>
+                    </div>
+              </div>
+          <button class="modal-close is-large" aria-label="close" onclick="closeShareModal()"></button>
+    </div>
+
+    <script src="/static/js/share.js"></script>
+
+    {% block scripts %} {% endblock %}
 </body>
 </html>

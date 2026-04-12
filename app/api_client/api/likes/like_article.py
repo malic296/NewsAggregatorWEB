@@ -3,11 +3,11 @@ from typing import Any
 
 import httpx
 
-from app.api_client import errors
-from app.api_client.client import AuthenticatedClient, Client
-from app.api_client.models import HTTPValidationError
-from app.api_client.models.like_response import LikeResponse
-from app.api_client.types import UNSET, Response
+from ... import errors
+from ...client import AuthenticatedClient, Client
+from ...models.http_validation_error import HTTPValidationError
+from ...models.like_response import LikeResponse
+from ...types import UNSET, Response
 
 
 def _get_kwargs(

@@ -1,6 +1,7 @@
 """Contains all the data models used in inputs/outputs"""
 
 from .article_dto import ArticleDTO
+from .article_response import ArticleResponse
 from .articles_response import ArticlesResponse
 from .base_response import BaseResponse
 from .body_login import BodyLogin
@@ -18,6 +19,7 @@ from .validation_error_context import ValidationErrorContext
 
 __all__ = (
     "ArticleDTO",
+    "ArticleResponse",
     "ArticlesResponse",
     "BaseResponse",
     "BodyLogin",

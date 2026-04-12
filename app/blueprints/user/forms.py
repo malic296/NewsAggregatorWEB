@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, EqualTo
 
 class CredentialsForm(FlaskForm):
@@ -10,9 +10,3 @@ class CredentialsForm(FlaskForm):
         "Confirm New Password",
         validators=[EqualTo('new_password', message='Passwords must match')]
     )
-
-class FilterForm(FlaskForm):
-    hours = StringField("Hours", validators=[DataRequired()])
-
-class ChannelFilterForm(FlaskForm):
-    submit = SubmitField("Save")

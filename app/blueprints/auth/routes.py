@@ -2,6 +2,7 @@ from flask import redirect, render_template, url_for, flash, session
 from app.api_client.models import RegistrationDTO, TokenResponse
 from dependencies.services import get_services
 from .forms import LoginForm, RegistrationForm, VerifyForm
+from app.utils.auth import set_auth_cookie
 from . import auth
 
 @auth.route('/')
@@ -17,15 +18,8 @@ def login():
         token: TokenResponse = services.consumers.login_user(form.credential.data, form.password.data)
 
         if token:
-            resp = redirect(url_for('logged.articles'))
-            resp.set_cookie(
-                'access_token',
-                token.access_token,
-                httponly=True,
-                secure=False,
-                samesite='Lax',
-                max_age=1800
-            )
+            resp = redirect(url_for('main.articles'))
+            resp = set_auth_cookie(resp, token.access_token)
             return resp
 
         flash("Login failed. Please check your credentials.", "danger")
@@ -56,15 +50,8 @@ def verify():
         if token:
             session.pop("pending_email", None)
 
-            resp = redirect(url_for('logged.articles'))
-            resp.set_cookie(
-                'access_token',
-                token.access_token,
-                httponly=True,
-                secure=False,
-                samesite='Lax',
-                max_age=1800
-            )
+            resp = redirect(url_for('main.articles'))
+            resp = set_auth_cookie(resp, token.access_token)
             return resp
 
         flash("Login failed. Please check your credentials.", "danger")
