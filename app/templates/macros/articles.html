@@ -8,7 +8,8 @@
             <div class="columns is-mobile">
                 <div class="column is-narrow has-text-centered px-4">
                     <button class="button is-ghost p-0 has-text-grey {{ 'has-text-primary' if article.liked_by_user }}"
-                            onclick="doLike('{{ article.uuid }}', this)">
+                            onclick="doLike(this)"
+                            data-url="{{ url_for('main.like_article', uuid=article.uuid) }}">
                         <span class="icon"><i class="{{ 'fas' if article.liked_by_user else 'far' }} fa-heart fa-lg"></i></span>
                         <div class="is-size-7 like-count has-text-weight-bold" id="like-count-{{ article.uuid }}">{{ article.likes }}</div>
                     </button>
