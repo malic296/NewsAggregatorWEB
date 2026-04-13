@@ -1,42 +1,63 @@
 {% extends "layouts/auth.html" %}
-{% block title %} Nastala chyba {% endblock %}
+
+{% block title %} Chyba systému {% endblock %}
 
 {% block content %}
-<div class="columns is-centered mt-6">
-    <div class="column is-6 has-text-centered">
+<section class="section is-medium">
+    <div class="container">
+        <div class="columns is-centered is-vcentered">
+            <div class="column is-7 has-text-centered">
 
-        <div class="block">
-            <span class="icon is-large has-text-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-            </span>
+                <div class="block">
+                    <span class="icon is-large has-text-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </span>
+                </div>
+
+                <h1 class="title is-1 is-uppercase has-text-white mb-2">
+                    Něco se <span class="has-text-primary">pokazilo</span>
+                </h1>
+
+                <p class="subtitle is-5 has-text-grey mb-6">
+                    Omlouváme se, ale při zpracování vašeho požadavku došlo k chybě.
+                </p>
+
+                <div class="box has-background-black-bis">
+                    <div class="media is-align-items-center">
+                        <div class="media-left">
+                            <span class="icon has-text-danger">
+                                <i class="fas fa-bug"></i>
+                            </span>
+                        </div>
+                        <div class="media-content">
+                            <p class="has-text-danger-light has-text-left is-family-monospace">
+                                {{ message if message else "Neočekávaná výjimka v jádru aplikace." }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="has-text-grey-light mt-6">
+                    Zkuste stránku obnovit nebo se vraťte do bezpečí pomocí odkazů níže.
+                </p>
+
+                <hr class="has-background-grey-darker my-6">
+
+                <nav class="buttons is-centered">
+                    <a href="{{ url_for('main.articles') }}" class="button is-primary is-rounded is-uppercase has-text-weight-bold">
+                        <span class="icon"><i class="fas fa-newspaper"></i></span>
+                        <span>Zpět na články</span>
+                    </a>
+
+                    {% if not session.get('access_token') %}
+                    <a href="{{ url_for('auth.login') }}" class="button is-ghost is-uppercase">
+                        Přihlásit se
+                    </a>
+                    {% endif %}
+                </nav>
+
+            </div>
         </div>
-
-        <h1 class="title is-2 is-uppercase has-text-white">Něco se pokazilo</h1>
-
-        <div class="box has-background-black-bis is-borderless mt-5">
-            <p class="subtitle is-5 has-text-danger-light">
-                {{ message }}
-            </p>
-        </div>
-
-        <p class="has-text-grey mt-5">
-            Bez obav, není to vaše chyba. Zkuste stránku obnovit nebo se vraťte do bezpečí pomocí odkazů níže.
-        </p>
-
-        <hr class="has-background-grey-darker my-6">
-
-        <nav class="buttons is-centered">
-            <a href="{{ url_for('auth.login') }}" class="button is-primary is-outlined is-uppercase">
-                <strong>Přihlásit se</strong>
-            </a>
-            <a href="{{ url_for('auth.register') }}" class="button is-dark is-inverted is-outlined is-uppercase">
-                Registrace
-            </a>
-            <a href="{{ url_for('auth.index') }}" class="button is-ghost is-uppercase">
-                Domů
-            </a>
-        </nav>
-
     </div>
-</div>
+</section>
 {% endblock %}

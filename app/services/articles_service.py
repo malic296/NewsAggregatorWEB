@@ -2,7 +2,7 @@ from app.api_client.client import AuthenticatedClient
 from app.api_client.api.articles import read_articles, read_article
 from app.api_client.models import ArticleDTO
 from typing import Optional
-from app.models.errors import ExternalServiceError, RateLimitError
+from app.utils.errors import catch_api_errors
 
 class ArticlesService:
     def __init__(self, client: AuthenticatedClient):
@@ -14,11 +14,7 @@ class ArticlesService:
             hours=hours if hours else 1
         )
 
-        if response.parsed.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        catch_api_errors(response)
 
         return response.parsed.articles
 
@@ -28,7 +24,6 @@ class ArticlesService:
             uuid=uuid,
         )
 
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        catch_api_errors(response)
 
         return response.parsed.article

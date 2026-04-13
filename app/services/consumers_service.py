@@ -2,7 +2,9 @@ from app.api_client.client import AuthenticatedClient, Client
 from app.api_client.api.consumers import login, request_new_registration, verify_email, get_currently_logged_consumer, update_credentials
 from app.api_client.models import BodyLogin, RegistrationDTO, TokenResponse, ConsumerDTO, UpdateCredentialsDTO
 from typing import Optional
-from app.models.errors import RateLimitError, ExternalServiceError
+from app.utils.errors import catch_api_errors
+from models import APIError
+
 
 class ConsumersService:
     def __init__(self, client: AuthenticatedClient | Client):
@@ -19,11 +21,7 @@ class ConsumersService:
             body=form_data
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        catch_api_errors(response)
 
         try:
             return response.parsed
@@ -36,11 +34,7 @@ class ConsumersService:
             body=registration
         )
 
-        if response.parsed.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        catch_api_errors(response)
 
         if response.parsed is not None:
             return True
@@ -54,11 +48,7 @@ class ConsumersService:
             code=code
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        catch_api_errors(response)
 
         try:
             return response.parsed
@@ -73,16 +63,12 @@ class ConsumersService:
             client=self.client
         )
 
-        if response.parsed.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        catch_api_errors(response)
 
         try:
             return response.parsed.consumers[0]
         except IndexError:
-            raise ExternalServiceError(f"API succeeded but did not return a user for get_current_user.")
+            raise APIError(f"API succeeded but did not return a user for get_current_user.")
 
     def update_credentials(self, credentials: UpdateCredentialsDTO):
         if not isinstance(self.client, AuthenticatedClient):
@@ -93,11 +79,7 @@ class ConsumersService:
             body=credentials
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        catch_api_errors(response)
 
         try:
             return response.parsed

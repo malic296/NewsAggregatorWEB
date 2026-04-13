@@ -1,6 +1,6 @@
 from app.api_client.client import AuthenticatedClient
 from app.api_client.api.likes import like_article
-from app.models.errors import RateLimitError, ExternalServiceError
+from app.utils.errors import catch_api_errors
 
 class LikesService:
     def __init__(self, client: AuthenticatedClient):
@@ -12,10 +12,6 @@ class LikesService:
             article_uuid=uuid
         )
 
-        if response.parsed.status_code == 429:
-            raise RateLimitError("API rate limit exceeded")
-
-        if response.parsed.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.parsed.status_code}")
+        catch_api_errors(response)
 
         return response.parsed.liked

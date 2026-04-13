@@ -1,4 +1,4 @@
-from app.models import ServiceContainer
+from app.models.service_container import ServiceContainer
 from app.services import ArticlesService, ChannelsService, LikesService, ConsumersService
 from flask import request
 from app.api_client.client import AuthenticatedClient, Client
