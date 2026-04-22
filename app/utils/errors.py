@@ -1,20 +1,16 @@
 from flask import render_template, flash, redirect, url_for
-from app.models.errors import APIError, RateLimitError, UnauthorizedError
+from app.models.errors import RateLimitError, UnauthorizedError
 
 def register_error_handlers(app):
     @app.errorhandler(RateLimitError)
     def rate_limit_error(error):
-        flash("Slow down! Too many requests. Please try again in a moment.", "warning")
+        flash("Zpomal! příliš mnoho aktivit.", "warning")
         return redirect(url_for("main.index"))
 
     @app.errorhandler(UnauthorizedError)
     def unauthorized_error(error):
         flash("Unauthorized. Please log in first.", "warning")
         return redirect(url_for("auth.login"))
-
-    @app.errorhandler(APIError)
-    def external_service_error(error):
-        return render_template("error.html", message= "External service error. Please try again later.")
 
     @app.errorhandler(404)
     def not_found_error(error):

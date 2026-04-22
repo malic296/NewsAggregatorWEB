@@ -3,13 +3,13 @@ from wtforms.validators import DataRequired, Email, Length
 from wtforms.fields import PasswordField, StringField
 
 class LoginForm(FlaskForm):
-    credential = StringField('Username/Email', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    credential = StringField('Přihlašovací jméno/Emailová adresa', validators=[DataRequired()])
+    password = PasswordField('Heslo', validators=[DataRequired()])
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Přihlašovací jméno', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Heslo', validators=[DataRequired()])
 
 class VerifyForm(FlaskForm):
-    code = StringField('Code', validators=[DataRequired(), Length(min=6, max=6)])
+    code = StringField('Kód', validators=[DataRequired(), Length(min=6, max=6)])

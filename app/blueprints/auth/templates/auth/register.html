@@ -4,14 +4,14 @@
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-5">
-        <div class="box has-background-black-bis">
+        <div class="box">
             <h1 class="title is-3 has-text-centered is-uppercase">Registrace</h1>
 
             <form method="POST">
                 {{ form.csrf_token }}
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.username.label.text }}</label>
+                    <label class="label ">{{ form.username.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.username(class="input is-primary is-outlined", placeholder="Zvolte si přezdívku") }}
                         <span class="icon is-small is-left">
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.email.label.text }}</label>
+                    <label class="label ">{{ form.email.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.email(class="input is-primary is-outlined", placeholder="vas@email.cz") }}
                         <span class="icon is-small is-left">
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.password.label.text }}</label>
+                    <label class="label ">{{ form.password.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.password(class="input is-primary is-outlined", placeholder="Vytvořte si silné heslo") }}
                         <span class="icon is-small is-left">
@@ -52,14 +52,14 @@
                 <div class="field mt-5">
                     <div class="control">
                         <button type="submit" class="button is-primary is-outlined is-fullwidth is-uppercase">
-                            <strong>Vytvořit účet</strong>
+                            <strong>Registrovat se</strong>
                         </button>
                     </div>
                 </div>
             </form>
 
             <footer class="mt-4 has-text-centered">
-                <p class="is-size-7 has-text-grey">
+                <p class="is-size-7">
                     Již máte účet? <a href="{{ url_for('auth.login') }}" class="has-text-primary">Přihlaste se zde</a>
                 </p>
             </footer>

@@ -4,14 +4,14 @@
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-4">
-        <div class="box has-background-black-bis">
+        <div class="box">
             <h1 class="title is-3 has-text-centered is-uppercase">Přihlášení</h1>
 
             <form method="POST">
                 {{ form.csrf_token }}
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.credential.label.text }}</label>
+                    <label class="label">{{ form.credential.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.credential(class="input is-primary is-outlined", placeholder="Uživatelské jméno nebo e-mail") }}
                         <span class="icon is-small is-left">
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.password.label.text }}</label>
+                    <label class="label">{{ form.password.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.password(class="input is-primary is-outlined", placeholder="Zadejte heslo") }}
                         <span class="icon is-small is-left">
@@ -37,14 +37,14 @@
                 <div class="field mt-5">
                     <div class="control">
                         <button type="submit" class="button is-primary is-outlined is-fullwidth is-uppercase">
-                            <strong>Vstoupit</strong>
+                            <strong>Přihlásit se</strong>
                         </button>
                     </div>
                 </div>
             </form>
 
             <footer class="mt-4 has-text-centered">
-                <p class="is-size-7 has-text-grey">
+                <p class="is-size-7">
                     Ještě nemáte účet? <a href="{{ url_for('auth.register') }}" class="has-text-primary">Zaregistrujte se</a>
                 </p>
             </footer>

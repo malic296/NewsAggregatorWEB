@@ -17,7 +17,7 @@
                 </p>
             </div>
 
-            <p class="has-text-grey mt-5">
+            <p class="mt-5">
                 Bez obav, není to vaše chyba. Zkuste stránku obnovit nebo se vraťte do bezpečí pomocí odkazů níže.
             </p>
 
@@ -27,11 +27,11 @@
                 <a href="{{ url_for('auth.login') }}" class="button is-primary">
                     <strong>Přihlásit se</strong>
                 </a>
-                <a href="{{ url_for('auth.register') }}" class="button is-ghost">
-                    Registrace
+                <a href="{{ url_for('auth.register') }}" class="button is-primary">
+                    <strong>Zaregistrovat se</strong>
                 </a>
-                <a href="{{ url_for('auth.index') }}" class="button is-ghost">
-                    Domů
+                <a href="{{ url_for('auth.index') }}" class="button is-primary">
+                    <strong>Domů</strong>
                 </a>
             </nav>
         </div>

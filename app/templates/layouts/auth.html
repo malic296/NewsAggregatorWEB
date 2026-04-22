@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs" data-theme="dark" class="has-background-black-ter">
+<html lang="cs" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>{% block title %}{% endblock %} | FedUp</title>
 </head>
-<body class="has-background-black-ter">
+<body>
     <nav class="navbar is-black is-spaced has-shadow" role="navigation">
         <div class="container">
             <div class="navbar-brand">
@@ -35,6 +35,13 @@
                             </a>
                         </div>
                     </div>
+                    <div class="navbar-item">
+                        <button id="theme-toggle" class="button is-ghost">
+                            <span class="icon">
+                                <i class="fas fa-moon" id="theme-icon"></i>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,5 +63,7 @@
 
         {% block content %}{% endblock %}
     </main>
+
+    <script src="/static/js/brightness_mode.js"></script>
 </body>
 </html>

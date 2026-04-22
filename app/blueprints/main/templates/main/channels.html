@@ -19,11 +19,11 @@
         <div class="columns is-vcentered mb-5">
             <div class="column">
                 <h1 class="title is-2 has-text-primary is-uppercase">Kanály</h1>
-                <p class="subtitle is-6 has-text-grey">Spravujte zdroje, ze kterých odebíráte novinky.</p>
+                <p class="subtitle is-6">Spravujte zdroje, ze kterých odebíráte novinky.</p>
             </div>
         </div>
 
-        <div class="box has-background-black-bis shadow is-borderless">
+        <div class="box shadow is-borderless">
             <form method="POST" action="{{ url_for('main.channels') }}">
                 {{ form.hidden_tag() }}
 
@@ -41,8 +41,8 @@
         </div>
 
         {% if not channels %}
-        <div class="notification is-dark is-outlined has-text-centered mt-5">
-            <p class="has-text-grey">Žádné kanály k dispozici.</p>
+        <div class="notification is-outlined has-text-centered mt-5">
+            <p>Žádné kanály k dispozici.</p>
         </div>
         {% endif %}
     </div>

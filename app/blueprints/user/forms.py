@@ -3,10 +3,10 @@ from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired, EqualTo
 
 class CredentialsForm(FlaskForm):
-    old_password = PasswordField("Current Password", validators=[DataRequired()])
-    new_username = StringField("New Username")
-    new_password = PasswordField("New Password")
+    old_password = PasswordField("Momentální heslo", validators=[DataRequired()])
+    new_username = StringField("Nové uživatelské jméno")
+    new_password = PasswordField("Nové heslo")
     new_password_integrity = PasswordField(
-        "Confirm New Password",
-        validators=[EqualTo('new_password', message='Passwords must match')]
+        "Znovu nové heslo",
+        validators=[EqualTo('new_password', message='Hesla se musí shodovat')]
     )

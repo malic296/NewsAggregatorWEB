@@ -4,15 +4,15 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        <h1 class="title">User Profile</h1>
+        <h1 class="title">Profil uživatele</h1>
         <hr>
 
         <div class="columns">
             <div class="column is-4">
                 <div class="box">
-                    <h3 class="subtitle is-5">Current Information</h3>
-                    <p><strong>Username:</strong> {{ user.username }}</p>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <h3 class="subtitle is-5">Momentální údaje</h3>
+                    <p><strong>Přihlašovací jméno:</strong> {{ user.username }}</p>
+                    <p><strong>Emailová adresa:</strong> {{ user.email }}</p>
                 </div>
             </div>
 
@@ -28,27 +28,27 @@
                 {% endwith %}
 
                 <div class="box">
-                    <h3 class="subtitle is-5">Update Credentials</h3>
+                    <h3 class="subtitle is-5">Aktualizovat přihlašovací údaje</h3>
                     <form method="POST" action="{{ url_for('user.profile') }}">
                         {{ form.hidden_tag() }}
 
                         <div class="field">
-                            <label class="label">Current Password <span class="has-text-danger">*</span></label>
+                            <label class="label">Momentální heslo <span class="has-text-danger">*</span></label>
                             <div class="control has-icons-left">
-                                {{ form.old_password(class="input", placeholder="Confirm current password to save changes") }}
+                                {{ form.old_password(class="input", placeholder="Momentální heslo") }}
                                 <span class="icon is-small is-left">
                                     <i class="fas fa-lock"></i>
                                 </span>
                             </div>
-                            <p class="help">Required to authorize any changes.</p>
+                            <p class="help">Povinný údaj.</p>
                         </div>
 
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
-                                    <label class="label">New Username</label>
+                                    <label class="label">Nové uživatelské jméno</label>
                                     <div class="control">
-                                        {{ form.new_username(class="input", placeholder="Leave blank to keep current") }}
+                                        {{ form.new_username(class="input", placeholder="Není povinné.") }}
                                     </div>
                                 </div>
                             </div>
@@ -57,17 +57,17 @@
                         <div class="columns">
                             <div class="column">
                                 <div class="field">
-                                    <label class="label">New Password</label>
+                                    <label class="label">Nové heslo</label>
                                     <div class="control">
-                                        {{ form.new_password(class="input", placeholder="Enter new password") }}
+                                        {{ form.new_password(class="input", placeholder="Není povinné.") }}
                                     </div>
                                 </div>
                             </div>
                             <div class="column">
                                 <div class="field">
-                                    <label class="label">Confirm New Password</label>
+                                    <label class="label">Potvrzení nového hesla</label>
                                     <div class="control">
-                                        {{ form.new_password_integrity(class="input", placeholder="Repeat new password") }}
+                                        {{ form.new_password_integrity(class="input", placeholder="Není povinné.") }}
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                         <div class="field mt-5">
                             <div class="control">
                                 <button type="submit" class="button is-primary is-fullwidth">
-                                    <strong>Update Credentials</strong>
+                                    <strong>Aktualizovat údaje</strong>
                                 </button>
                             </div>
                         </div>

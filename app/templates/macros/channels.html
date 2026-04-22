@@ -1,24 +1,24 @@
   {% macro render_channels(channels) %}
     <div class="table-container">
-        <table class="table is-fullwidth is-hoverable has-background-transparent">
+        <table class="table is-fullwidth is-hoverable">
             <thead>
                 <tr>
-                    <th class="has-text-grey-light">Název zdroje</th>
-                    <th class="has-text-grey-light">Odkaz</th>
-                    <th class="has-text-centered has-text-grey-light">Stav</th>
+                    <th>Název zdroje</th>
+                    <th>Odkaz</th>
+                    <th class="has-text-centered ">Stav</th>
                 </tr>
             </thead>
             <tbody>
                 {% for channel in channels %}
-                <tr class="has-text-grey-light">
-                    <td class="is-vcentered has-text-weight-semibold has-text-white">
+                <tr>
+                    <td class="is-vcentered has-text-weight-semibold">
                         <span class="icon is-small mr-2 has-text-primary">
                             <i class="fas fa-rss-square"></i>
                         </span>
                         {{ channel.title }}
                     </td>
                     <td class="is-vcentered">
-                        <a href="{{ channel.link }}" target="_blank" class="has-text-grey is-size-7">
+                        <a href="{{ channel.link }}" target="_blank" class="is-size-7">
                             {{ channel.link | truncate(40) }}
                         </a>
                     </td>

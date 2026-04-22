@@ -1,9 +1,16 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, EqualTo
+from wtforms import IntegerField, SubmitField
+from wtforms.validators import DataRequired, NumberRange
 
 class FilterForm(FlaskForm):
-    hours = StringField("Hours", validators=[DataRequired()])
+    hours = IntegerField(
+        "Hodiny",
+        default=1,
+        validators=[
+            DataRequired(message="Pole nesmí být prázdné."),
+            NumberRange(min=1, max=5, message="Prosím, zadejte počet hodin mezi 1 a 5.")
+        ]
+    )
 
 class ChannelFilterForm(FlaskForm):
-    submit = SubmitField("Save")
+    submit = SubmitField("Uložit")

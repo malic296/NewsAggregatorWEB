@@ -24,7 +24,16 @@ html, body {
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
 
-/* Custom Scrollbar for modern look */
+.navbar-item.is-active {
+    background-color: transparent !important;
+    color: var(--bulma-primary) !important;
+    border-bottom: 2px solid var(--bulma-primary);
+}
+
+.navbar-item:hover {
+    background-color: transparent !important;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -40,4 +49,14 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--bulma-primary);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

@@ -51,6 +51,13 @@
                             </a>
                         </div>
                     </div>
+                    <div class="navbar-item">
+                        <button id="theme-toggle" class="button is-ghost">
+                            <span class="icon">
+                                <i class="fas fa-moon" id="theme-icon"></i>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,31 +108,8 @@
     <script src="/static/js/share.js"></script>
     <script src="/static/js/articles.js"></script>
     <script src="/static/js/channels.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Navbar burger toggle
-            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-            if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach( el => {
-                    el.addEventListener('click', () => {
-                        const target = el.dataset.target;
-                        const $target = document.getElementById(target);
-                        el.classList.toggle('is-active');
-                        $target.classList.toggle('is-active');
-                    });
-                });
-            }
-
-            // Notification delete
-            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-                const $notification = $delete.parentNode;
-                $delete.addEventListener('click', () => {
-                    $notification.parentNode.removeChild($notification);
-                });
-            });
-        });
-    </script>
+    <script src="/static/js/brightness_mode.js"></script>
+    <script src="/static/js/flash_messages.js"></script>
 
     {% block scripts %} {% endblock %}
 </body>

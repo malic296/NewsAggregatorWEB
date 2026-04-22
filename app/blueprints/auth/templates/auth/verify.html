@@ -4,9 +4,9 @@
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-4">
-        <div class="box has-background-black-bis">
+        <div class="box">
             <h1 class="title is-3 has-text-centered is-uppercase">Zabezpečení</h1>
-            <p class="subtitle is-6 has-text-centered has-text-grey-light">
+            <p class="subtitle is-6 has-text-centered">
                 Zadejte ověřovací kód, který jsme zaslali na váš e-mail.
             </p>
 
@@ -14,7 +14,7 @@
                 {{ form.csrf_token }}
 
                 <div class="field">
-                    <label class="label has-text-grey-light">{{ form.code.label.text }}</label>
+                    <label class="label">{{ form.code.label.text }}</label>
                     <div class="control has-icons-left">
                         {{ form.code(class="input is-primary is-outlined", placeholder="Zadejte 6místný kód") }}
                         <span class="icon is-small is-left">
@@ -36,7 +36,7 @@
             </form>
 
             <footer class="mt-4 has-text-centered">
-                <p class="is-size-7 has-text-grey">
+                <p class="is-size-7">
                     Kód nedorazil? <a href="#" class="has-text-primary">Odeslat znovu</a>
                 </p>
             </footer>
