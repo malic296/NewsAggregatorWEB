@@ -1,4 +1,4 @@
-from flask import redirect, render_template, url_for, flash, session
+from flask import redirect, render_template, url_for, session
 from app.api_client.models import RegistrationDTO, TokenResponse
 from dependencies.services import get_services
 from .forms import LoginForm, RegistrationForm, VerifyForm
@@ -21,8 +21,6 @@ def login():
             resp = redirect(url_for('main.articles'))
             resp = set_auth_cookie(resp, token.access_token)
             return resp
-
-        flash("Login failed. Please check your credentials.", "danger")
 
     return render_template("auth/login.html", form = form)
 
@@ -53,7 +51,5 @@ def verify():
             resp = redirect(url_for('main.articles'))
             resp = set_auth_cookie(resp, token.access_token)
             return resp
-
-        flash("Login failed. Please check your credentials.", "danger")
 
     return render_template("auth/verify.html", form = form)

@@ -1,20 +1,29 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-    if ($navbarBurgers.length > 0) {
-        $navbarBurgers.forEach( el => {
-            el.addEventListener('click', () => {
-                const target = el.dataset.target;
-                const $target = document.getElementById(target);
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-            });
-        });
+document.addEventListener('click', (event) => {
+    const $burger = event.target.closest('.navbar-burger');
+    if ($burger) {
+        const targetId = $burger.dataset.target;
+        const $targetMenu = document.getElementById(targetId);
+
+        if ($targetMenu) {
+            $burger.classList.toggle('is-active');
+            $targetMenu.classList.toggle('is-active');
+        }
     }
 
-    (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-        const $notification = $delete.parentNode;
-        $delete.addEventListener('click', () => {
-            $notification.parentNode.removeChild($notification);
-        });
-    });
+    const $delete = event.target.closest('.notification .delete');
+    if ($delete) {
+        const $notification = $delete.closest('.notification');
+        $notification.remove();
+    }
+
+    const $navbarLink = event.target.closest('.navbar-link');
+    if ($navbarLink && $navbarLink.parentElement.classList.contains('has-dropdown')) {
+        const $dropdownMenu = $navbarLink.nextElementSibling; // The .navbar-dropdown div
+
+        if (window.innerWidth <= 1023) {
+            $dropdownMenu.classList.toggle('is-hidden-touch');
+
+            $navbarLink.classList.toggle('is-active');
+        }
+    }
 });

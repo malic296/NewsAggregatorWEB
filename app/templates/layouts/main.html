@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>{% block title %}{% endblock %} | FedUp</title>
+    {% from "macros/flash.html" import render_flash_messages %}
 </head>
 <body class="has-navbar-fixed-top">
     <nav class="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation">
@@ -37,18 +38,15 @@
 
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
+                        <a class="navbar-link is-arrowless">
                             <span class="icon"><i class="fas fa-user-circle"></i></span>
                             <span>Můj účet</span>
                         </a>
-                        <div class="navbar-dropdown is-right">
-                            <a href="{{ url_for('user.profile') }}" class="navbar-item">
-                                Profil
-                            </a>
+
+                        <div class="navbar-dropdown is-right is-hidden-touch">
+                            <a href="{{ url_for('user.profile') }}" class="navbar-item">Profil</a>
                             <hr class="navbar-divider">
-                            <a href="{{ url_for('user.logout') }}" class="navbar-item has-text-danger">
-                                Odhlásit se
-                            </a>
+                            <a href="{{ url_for('user.logout') }}" class="navbar-item has-text-danger">Odhlásit se</a>
                         </div>
                     </div>
                     <div class="navbar-item">
@@ -65,20 +63,7 @@
 
     <main class="section">
         <div class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                <div class="columns is-centered">
-                    <div class="column is-8">
-                        {% for category, message in messages %}
-                          <div class="notification is-{{ category if category != 'message' else 'info' }} is-light">
-                            <button class="delete"></button>
-                            {{ message }}
-                          </div>
-                        {% endfor %}
-                    </div>
-                </div>
-              {% endif %}
-            {% endwith %}
+            {{ render_flash_messages() }}
 
             {% block content %}{% endblock %}
         </div>

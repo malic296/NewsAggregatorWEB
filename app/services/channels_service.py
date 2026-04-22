@@ -1,10 +1,9 @@
 from app.api_client.client import AuthenticatedClient
 from app.api_client.models import ChannelDTO
 from app.api_client.api.channels import channels, disabled
-from app.models.errors import ExternalServiceError, RateLimitError
+from .base_service import BaseService
 
-
-class ChannelsService:
+class ChannelsService(BaseService):
     def __init__(self, client: AuthenticatedClient):
         self.client = client
 
@@ -13,17 +12,7 @@ class ChannelsService:
             client=self.client
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("Příliš mnoho pokusů. Zkuste to prosím později.")
-
-        if response.status_code == 401:
-            raise ExternalServiceError("Neplatné přihlašovací údaje.", status_code=401)
-
-        if response.status_code >= 500:
-            raise ExternalServiceError("Služba je dočasně nedostupná.", status_code=response.status_code)
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        self._handle_response(response)
 
         return response.parsed.channels
 
@@ -33,15 +22,5 @@ class ChannelsService:
             body=channels_to_disable
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("Příliš mnoho pokusů. Zkuste to prosím později.")
-
-        if response.status_code == 401:
-            raise ExternalServiceError("Neplatné přihlašovací údaje.", status_code=401)
-
-        if response.status_code >= 500:
-            raise ExternalServiceError("Služba je dočasně nedostupná.", status_code=response.status_code)
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        self._handle_response(response)
 

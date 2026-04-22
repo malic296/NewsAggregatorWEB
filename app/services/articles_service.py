@@ -2,9 +2,9 @@ from app.api_client.client import AuthenticatedClient
 from app.api_client.api.articles import articles, article, like
 from app.api_client.models import ArticleDTO
 from typing import Optional
-from app.models.errors import ExternalServiceError, RateLimitError
+from .base_service import BaseService
 
-class ArticlesService:
+class ArticlesService(BaseService):
     def __init__(self, client: AuthenticatedClient):
         self.client = client
 
@@ -14,17 +14,7 @@ class ArticlesService:
             hours=hours if hours else 1
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("Příliš mnoho pokusů. Zkuste to prosím později.")
-
-        if response.status_code == 401:
-            raise ExternalServiceError("Neplatné přihlašovací údaje.", status_code=401)
-
-        if response.status_code >= 500:
-            raise ExternalServiceError("Služba je dočasně nedostupná.", status_code=response.status_code)
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        self._handle_response(response)
 
         return response.parsed.articles
 
@@ -34,17 +24,7 @@ class ArticlesService:
             uuid=uuid,
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("Příliš mnoho pokusů. Zkuste to prosím později.")
-
-        if response.status_code == 401:
-            raise ExternalServiceError("Neplatné přihlašovací údaje.", status_code=401)
-
-        if response.status_code >= 500:
-            raise ExternalServiceError("Služba je dočasně nedostupná.", status_code=response.status_code)
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        self._handle_response(response)
 
         return response.parsed.article
 
@@ -54,16 +34,6 @@ class ArticlesService:
             article_uuid=uuid
         )
 
-        if response.status_code == 429:
-            raise RateLimitError("Příliš mnoho pokusů. Zkuste to prosím později.")
-
-        if response.status_code == 401:
-            raise ExternalServiceError("Neplatné přihlašovací údaje.", status_code=401)
-
-        if response.status_code >= 500:
-            raise ExternalServiceError("Služba je dočasně nedostupná.", status_code=response.status_code)
-
-        if response.status_code != 200:
-            raise ExternalServiceError(f"API failed with: {response.status_code}")
+        self._handle_response(response)
 
         return response.parsed.liked

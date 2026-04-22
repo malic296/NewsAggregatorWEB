@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for
 from app.decorators import authorized
 from dependencies.services import get_services
 from . import main
@@ -15,7 +15,6 @@ def articles():
         try:
             hours = int(filter_form.hours.data)
         except Exception:
-            flash("Hours must be in integer format", "error")
             hours = 1
         if not hours or int(hours) < 1:
             filter_form.hours.errors.append("Hours must be set to 1 or greater.")

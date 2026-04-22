@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>{% block title %}{% endblock %} | FedUp</title>
+    {% from "macros/flash.html" import render_flash_messages %}
 </head>
 <body>
     <nav class="navbar is-black is-spaced has-shadow" role="navigation">
@@ -15,9 +16,15 @@
                 <a class="navbar-item" href="{{ url_for('auth.index') }}">
                     <span class="title is-4 has-text-primary is-uppercase">FedUp</span>
                 </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAuth">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
 
-            <div class="navbar-menu is-active">
+            <div id="navbarAuth" class="navbar-menu">
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
@@ -47,23 +54,15 @@
         </div>
     </nav>
 
-    <main>
-        <div class="container mt-4">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="notification is-primary is-light is-outlined">
-                    <button class="delete"></button>
-                    {{ message }}
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-        </div>
+    <main class="section">
+        <div class="container">
+            {{ render_flash_messages() }}
 
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <script src="/static/js/brightness_mode.js"></script>
+    <script src="/static/js/flash_messages.js"></script>
 </body>
 </html>

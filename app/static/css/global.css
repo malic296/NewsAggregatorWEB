@@ -60,3 +60,20 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.navbar-item.has-dropdown.is-active > .navbar-link,
+.navbar-item.has-dropdown:hover > .navbar-link {
+    background-color: transparent !important;
+    color: var(--bulma-primary) !important;
+    border-bottom: 2px solid var(--bulma-primary);
+}
+
+.navbar-link.is-active {
+    background-color: transparent !important;
+    color: var(--bulma-primary) !important;
+}
+
+.navbar-dropdown .navbar-item:hover {
+    background-color: rgba(var(--bulma-primary-rgb), 0.1) !important;
+    color: var(--bulma-primary) !important;
+}

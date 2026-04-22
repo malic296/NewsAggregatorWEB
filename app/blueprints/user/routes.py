@@ -5,6 +5,7 @@ from app.api_client.models import UpdateCredentialsDTO, TokenResponse
 from flask import redirect, url_for, render_template
 from app.utils.auth import set_auth_cookie, delete_auth_cookie
 from . import user
+from flask import request, flash
 
 @user.route("/profile", methods=["GET", "POST"])
 @authorized
@@ -28,6 +29,11 @@ def profile():
             resp = set_auth_cookie(resp, token.access_token)
 
             return resp
+    else:
+        if request.method == "POST":
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(str(error), "danger")
 
     user = services.consumers.get_current_user()
     return render_template("user/profile.html", user=user, form=form)
