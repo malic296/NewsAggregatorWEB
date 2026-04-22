@@ -15,13 +15,11 @@ class LikeResponse:
     Attributes:
         success (bool):
         message (str):
-        status_code (int):
         liked (bool):
     """
 
     success: bool
     message: str
-    status_code: int
     liked: bool
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -29,8 +27,6 @@ class LikeResponse:
         success = self.success
 
         message = self.message
-
-        status_code = self.status_code
 
         liked = self.liked
 
@@ -40,7 +36,6 @@ class LikeResponse:
             {
                 "success": success,
                 "message": message,
-                "status_code": status_code,
                 "liked": liked,
             }
         )
@@ -54,14 +49,11 @@ class LikeResponse:
 
         message = d.pop("message")
 
-        status_code = d.pop("status_code")
-
         liked = d.pop("liked")
 
         like_response = cls(
             success=success,
             message=message,
-            status_code=status_code,
             liked=liked,
         )
 

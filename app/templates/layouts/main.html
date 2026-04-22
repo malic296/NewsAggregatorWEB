@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs" data-theme="dark" class="has-background-black-ter">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,41 +8,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>{% block title %}{% endblock %} | FedUp</title>
 </head>
-<body class="has-background-black-ter">
-    <nav class="navbar is-black is-spaced has-shadow" role="navigation">
+<body class="has-navbar-fixed-top">
+    <nav class="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
                 <a class="navbar-item" href="{{ url_for('main.articles') }}">
-                    <span class="title is-4 has-text-primary is-uppercase">FedUp</span>
+                    <span class="title is-4 has-text-primary is-uppercase has-text-weight-bold">FedUp</span>
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </a>
             </div>
 
-            <div class="navbar-menu is-active">
+            <div id="navbarMain" class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a href="{{ url_for('main.articles') }}" class="button is-dark is-primary is-outlined">
-                                <span class="icon"><i class="fas fa-newspaper"></i></span>
-                                <span>Články</span>
-                            </a>
-                            <a href="{{ url_for('main.channels') }}" class="button is-dark is-primary is-outlined">
-                                <span class="icon"><i class="fas fa-rss"></i></span>
-                                <span>Kanály</span>
-                            </a>
-                        </div>
-                    </div>
+                    <a href="{{ url_for('main.articles') }}" class="navbar-item {{ 'is-active' if request.endpoint == 'main.articles' }}">
+                        <span class="icon"><i class="fas fa-newspaper"></i></span>
+                        <span>Články</span>
+                    </a>
+                    <a href="{{ url_for('main.channels') }}" class="navbar-item {{ 'is-active' if request.endpoint == 'main.channels' }}">
+                        <span class="icon"><i class="fas fa-rss"></i></span>
+                        <span>Kanály</span>
+                    </a>
                 </div>
 
                 <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a href="{{ url_for('user.profile') }}" class="button is-dark is-primary is-outlined">
-                                <span class="icon"><i class="fas fa-user-circle"></i></span>
-                                <span>Můj profil</span>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            <span class="icon"><i class="fas fa-user-circle"></i></span>
+                            <span>Můj účet</span>
+                        </a>
+                        <div class="navbar-dropdown is-right">
+                            <a href="{{ url_for('user.profile') }}" class="navbar-item">
+                                Profil
                             </a>
-                            <a href="{{ url_for('user.logout') }}" class="button is-dark is-danger is-outlined">
-                                <span class="icon"><i class="fas fa-power-off"></i></span>
-                                <span>Odhlásit</span>
+                            <hr class="navbar-divider">
+                            <a href="{{ url_for('user.logout') }}" class="navbar-item has-text-danger">
+                                Odhlásit se
                             </a>
                         </div>
                     </div>
@@ -51,45 +56,76 @@
         </div>
     </nav>
 
-    <main>
-        <div class="container mt-4">
+    <main class="section">
+        <div class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
-                {% for category, message in messages %}
-                  <div class="notification is-primary is-light is-outlined">
-                    <button class="delete"></button>
-                    {{ message }}
-                  </div>
-                {% endfor %}
+                <div class="columns is-centered">
+                    <div class="column is-8">
+                        {% for category, message in messages %}
+                          <div class="notification is-{{ category if category != 'message' else 'info' }} is-light">
+                            <button class="delete"></button>
+                            {{ message }}
+                          </div>
+                        {% endfor %}
+                    </div>
+                </div>
               {% endif %}
             {% endwith %}
-        </div>
 
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <div id="share-modal" class="modal">
           <div class="modal-background" onclick="closeShareModal()"></div>
-              <div class="modal-content is-small">
-                    <div class="box has-background-grey-darker">
-                        <h3 class="title is-6 has-text-grey-light is-uppercase mb-3">Sdílet zprávu</h3>
-                        <div class="field has-addons">
-                            <div class="control is-expanded">
-                                <input id="share-link-input" class="input is-dark has-text-white" type="text" readonly style="background: #1e1f22; border-color: #000;">
-                            </div>
-                            <div class="control">
-                                <button id="copy-btn" class="button is-link has-text-weight-bold" onclick="copyShareLink()">Kopírovat</button>
-                            </div>
+          <div class="modal-card" style="max-width: 400px;">
+                <header class="modal-card-head">
+                    <p class="modal-card-title is-size-6 is-uppercase">Sdílet zprávu</p>
+                    <button class="delete" aria-label="close" onclick="closeShareModal()"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="share-link-input" class="input" type="text" readonly>
                         </div>
-                        <p id="copy-feedback" class="is-size-7 has-text-success mt-2 is-hidden">Odkaz byl zkopírován!</p>
+                        <div class="control">
+                            <button id="copy-btn" class="button is-link" onclick="copyShareLink()">Kopírovat</button>
+                        </div>
                     </div>
-              </div>
-          <button class="modal-close is-large" aria-label="close" onclick="closeShareModal()"></button>
+                    <p id="copy-feedback" class="help is-success is-hidden">Odkaz byl zkopírován!</p>
+                </section>
+          </div>
     </div>
 
     <script src="/static/js/share.js"></script>
     <script src="/static/js/articles.js"></script>
     <script src="/static/js/channels.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navbar burger toggle
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach( el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+
+            // Notification delete
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+        });
+    </script>
 
     {% block scripts %} {% endblock %}
 </body>

@@ -40,7 +40,7 @@ def article(uuid):
 @authorized
 def like_article(uuid):
     services = get_services()
-    liked = services.likes.like_article(uuid)
+    liked = services.articles.like_article(uuid)
     return {"liked": liked}
 
 @main.route("/channels", methods=["GET", "POST"])

@@ -1,63 +1,41 @@
 {% extends "layouts/auth.html" %}
-
-{% block title %} Chyba systému {% endblock %}
+{% block title %} Nastala chyba {% endblock %}
 
 {% block content %}
-<section class="section is-medium">
-    <div class="container">
-        <div class="columns is-centered is-vcentered">
-            <div class="column is-7 has-text-centered">
+<div class="columns is-centered">
+    <div class="column is-6-tablet is-4-desktop has-text-centered">
 
-                <div class="block">
-                    <span class="icon is-large has-text-danger">
-                        <i class="fas fa-exclamation-circle"></i>
-                    </span>
-                </div>
-
-                <h1 class="title is-1 is-uppercase has-text-white mb-2">
-                    Něco se <span class="has-text-primary">pokazilo</span>
-                </h1>
-
-                <p class="subtitle is-5 has-text-grey mb-6">
-                    Omlouváme se, ale při zpracování vašeho požadavku došlo k chybě.
+        <div class="section">
+            <span class="icon is-large has-text-danger mb-4">
+                <i class="fas fa-exclamation-triangle fa-3x"></i>
+            </span>
+            <h1 class="title is-2 is-uppercase">Něco se pokazilo</h1>
+            
+            <div class="notification is-danger is-light mt-5">
+                <p class="subtitle is-5">
+                    {{ message }}
                 </p>
-
-                <div class="box has-background-black-bis">
-                    <div class="media is-align-items-center">
-                        <div class="media-left">
-                            <span class="icon has-text-danger">
-                                <i class="fas fa-bug"></i>
-                            </span>
-                        </div>
-                        <div class="media-content">
-                            <p class="has-text-danger-light has-text-left is-family-monospace">
-                                {{ message if message else "Neočekávaná výjimka v jádru aplikace." }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="has-text-grey-light mt-6">
-                    Zkuste stránku obnovit nebo se vraťte do bezpečí pomocí odkazů níže.
-                </p>
-
-                <hr class="has-background-grey-darker my-6">
-
-                <nav class="buttons is-centered">
-                    <a href="{{ url_for('main.articles') }}" class="button is-primary is-rounded is-uppercase has-text-weight-bold">
-                        <span class="icon"><i class="fas fa-newspaper"></i></span>
-                        <span>Zpět na články</span>
-                    </a>
-
-                    {% if not session.get('access_token') %}
-                    <a href="{{ url_for('auth.login') }}" class="button is-ghost is-uppercase">
-                        Přihlásit se
-                    </a>
-                    {% endif %}
-                </nav>
-
             </div>
+
+            <p class="has-text-grey mt-5">
+                Bez obav, není to vaše chyba. Zkuste stránku obnovit nebo se vraťte do bezpečí pomocí odkazů níže.
+            </p>
+
+            <hr class="my-6">
+
+            <nav class="buttons is-centered">
+                <a href="{{ url_for('auth.login') }}" class="button is-primary">
+                    <strong>Přihlásit se</strong>
+                </a>
+                <a href="{{ url_for('auth.register') }}" class="button is-ghost">
+                    Registrace
+                </a>
+                <a href="{{ url_for('auth.index') }}" class="button is-ghost">
+                    Domů
+                </a>
+            </nav>
         </div>
+
     </div>
-</section>
+</div>
 {% endblock %}

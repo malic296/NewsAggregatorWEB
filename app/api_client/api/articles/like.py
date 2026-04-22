@@ -1,30 +1,25 @@
 from http import HTTPStatus
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.articles_response import ArticlesResponse
 from ...models.http_validation_error import HTTPValidationError
-from ...types import UNSET, Response, Unset
+from ...models.like_response import LikeResponse
+from ...types import Response
 
 
 def _get_kwargs(
-    *,
-    hours: int | Unset = 1,
+    article_uuid: str,
 ) -> dict[str, Any]:
 
-    params: dict[str, Any] = {}
-
-    params["hours"] = hours
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
-
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": "/latest/articles/read_articles",
-        "params": params,
+        "method": "post",
+        "url": "/v1/articles/{article_uuid}/like".format(
+            article_uuid=quote(str(article_uuid), safe=""),
+        ),
     }
 
     return _kwargs
@@ -32,9 +27,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> ArticlesResponse | HTTPValidationError | None:
+) -> HTTPValidationError | LikeResponse | None:
     if response.status_code == 200:
-        response_200 = ArticlesResponse.from_dict(response.json())
+        response_200 = LikeResponse.from_dict(response.json())
 
         return response_200
 
@@ -51,7 +46,7 @@ def _parse_response(
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[ArticlesResponse | HTTPValidationError]:
+) -> Response[HTTPValidationError | LikeResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -61,25 +56,25 @@ def _build_response(
 
 
 def sync_detailed(
+    article_uuid: str,
     *,
     client: AuthenticatedClient,
-    hours: int | Unset = 1,
-) -> Response[ArticlesResponse | HTTPValidationError]:
-    """Read Articles
+) -> Response[HTTPValidationError | LikeResponse]:
+    """Like
 
     Args:
-        hours (int | Unset):  Default: 1.
+        article_uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ArticlesResponse | HTTPValidationError]
+        Response[HTTPValidationError | LikeResponse]
     """
 
     kwargs = _get_kwargs(
-        hours=hours,
+        article_uuid=article_uuid,
     )
 
     response = client.get_httpx_client().request(
@@ -90,49 +85,49 @@ def sync_detailed(
 
 
 def sync(
+    article_uuid: str,
     *,
     client: AuthenticatedClient,
-    hours: int | Unset = 1,
-) -> ArticlesResponse | HTTPValidationError | None:
-    """Read Articles
+) -> HTTPValidationError | LikeResponse | None:
+    """Like
 
     Args:
-        hours (int | Unset):  Default: 1.
+        article_uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ArticlesResponse | HTTPValidationError
+        HTTPValidationError | LikeResponse
     """
 
     return sync_detailed(
+        article_uuid=article_uuid,
         client=client,
-        hours=hours,
     ).parsed
 
 
 async def asyncio_detailed(
+    article_uuid: str,
     *,
     client: AuthenticatedClient,
-    hours: int | Unset = 1,
-) -> Response[ArticlesResponse | HTTPValidationError]:
-    """Read Articles
+) -> Response[HTTPValidationError | LikeResponse]:
+    """Like
 
     Args:
-        hours (int | Unset):  Default: 1.
+        article_uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ArticlesResponse | HTTPValidationError]
+        Response[HTTPValidationError | LikeResponse]
     """
 
     kwargs = _get_kwargs(
-        hours=hours,
+        article_uuid=article_uuid,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -141,26 +136,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    article_uuid: str,
     *,
     client: AuthenticatedClient,
-    hours: int | Unset = 1,
-) -> ArticlesResponse | HTTPValidationError | None:
-    """Read Articles
+) -> HTTPValidationError | LikeResponse | None:
+    """Like
 
     Args:
-        hours (int | Unset):  Default: 1.
+        article_uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ArticlesResponse | HTTPValidationError
+        HTTPValidationError | LikeResponse
     """
 
     return (
         await asyncio_detailed(
+            article_uuid=article_uuid,
             client=client,
-            hours=hours,
         )
     ).parsed

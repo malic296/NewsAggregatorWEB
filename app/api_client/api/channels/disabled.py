@@ -19,7 +19,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "post",
-        "url": "/latest/channels/set_disabled_channels",
+        "url": "/v1/channels/disabled",
     }
 
     _kwargs["json"] = []
@@ -68,7 +68,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     body: list[ChannelDTO],
 ) -> Response[BaseResponse | HTTPValidationError]:
-    """Set Disabled Channels
+    """Disabled
 
     Args:
         body (list[ChannelDTO]):
@@ -97,7 +97,7 @@ def sync(
     client: AuthenticatedClient,
     body: list[ChannelDTO],
 ) -> BaseResponse | HTTPValidationError | None:
-    """Set Disabled Channels
+    """Disabled
 
     Args:
         body (list[ChannelDTO]):
@@ -121,7 +121,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     body: list[ChannelDTO],
 ) -> Response[BaseResponse | HTTPValidationError]:
-    """Set Disabled Channels
+    """Disabled
 
     Args:
         body (list[ChannelDTO]):
@@ -148,7 +148,7 @@ async def asyncio(
     client: AuthenticatedClient,
     body: list[ChannelDTO],
 ) -> BaseResponse | HTTPValidationError | None:
-    """Set Disabled Channels
+    """Disabled
 
     Args:
         body (list[ChannelDTO]):

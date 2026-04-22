@@ -19,13 +19,11 @@ class ChannelsResponse:
     Attributes:
         success (bool):
         message (str):
-        status_code (int):
         channels (list[ChannelDTO]):
     """
 
     success: bool
     message: str
-    status_code: int
     channels: list[ChannelDTO]
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -33,8 +31,6 @@ class ChannelsResponse:
         success = self.success
 
         message = self.message
-
-        status_code = self.status_code
 
         channels = []
         for channels_item_data in self.channels:
@@ -47,7 +43,6 @@ class ChannelsResponse:
             {
                 "success": success,
                 "message": message,
-                "status_code": status_code,
                 "channels": channels,
             }
         )
@@ -63,8 +58,6 @@ class ChannelsResponse:
 
         message = d.pop("message")
 
-        status_code = d.pop("status_code")
-
         channels = []
         _channels = d.pop("channels")
         for channels_item_data in _channels:
@@ -75,7 +68,6 @@ class ChannelsResponse:
         channels_response = cls(
             success=success,
             message=message,
-            status_code=status_code,
             channels=channels,
         )
 

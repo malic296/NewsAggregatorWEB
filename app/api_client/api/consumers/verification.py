@@ -26,7 +26,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "post",
-        "url": "/latest/consumers/register/verify_email",
+        "url": "/v1/consumers/verification",
         "params": params,
     }
 
@@ -69,7 +69,7 @@ def sync_detailed(
     email: str,
     code: int,
 ) -> Response[HTTPValidationError | TokenResponse]:
-    """Verify Email
+    """Verification
 
     Args:
         email (str):
@@ -101,7 +101,7 @@ def sync(
     email: str,
     code: int,
 ) -> HTTPValidationError | TokenResponse | None:
-    """Verify Email
+    """Verification
 
     Args:
         email (str):
@@ -128,7 +128,7 @@ async def asyncio_detailed(
     email: str,
     code: int,
 ) -> Response[HTTPValidationError | TokenResponse]:
-    """Verify Email
+    """Verification
 
     Args:
         email (str):
@@ -158,7 +158,7 @@ async def asyncio(
     email: str,
     code: int,
 ) -> HTTPValidationError | TokenResponse | None:
-    """Verify Email
+    """Verification
 
     Args:
         email (str):

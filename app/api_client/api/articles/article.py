@@ -1,29 +1,42 @@
 from http import HTTPStatus
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.consumers_response import ConsumersResponse
+from ...models.article_response import ArticleResponse
+from ...models.http_validation_error import HTTPValidationError
 from ...types import Response
 
 
-def _get_kwargs() -> dict[str, Any]:
+def _get_kwargs(
+    uuid: str,
+) -> dict[str, Any]:
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": "/latest/consumers/get_currently_logged_consumer",
+        "url": "/v1/articles/{uuid}".format(
+            uuid=quote(str(uuid), safe=""),
+        ),
     }
 
     return _kwargs
 
 
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> ConsumersResponse | None:
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> ArticleResponse | HTTPValidationError | None:
     if response.status_code == 200:
-        response_200 = ConsumersResponse.from_dict(response.json())
+        response_200 = ArticleResponse.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 422:
+        response_422 = HTTPValidationError.from_dict(response.json())
+
+        return response_422
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -31,7 +44,9 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[ConsumersResponse]:
+def _build_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Response[ArticleResponse | HTTPValidationError]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -41,20 +56,26 @@ def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Res
 
 
 def sync_detailed(
+    uuid: str,
     *,
-    client: AuthenticatedClient,
-) -> Response[ConsumersResponse]:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+) -> Response[ArticleResponse | HTTPValidationError]:
+    """Article
+
+    Args:
+        uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ConsumersResponse]
+        Response[ArticleResponse | HTTPValidationError]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        uuid=uuid,
+    )
 
     response = client.get_httpx_client().request(
         **kwargs,
@@ -64,39 +85,50 @@ def sync_detailed(
 
 
 def sync(
+    uuid: str,
     *,
-    client: AuthenticatedClient,
-) -> ConsumersResponse | None:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+) -> ArticleResponse | HTTPValidationError | None:
+    """Article
+
+    Args:
+        uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ConsumersResponse
+        ArticleResponse | HTTPValidationError
     """
 
     return sync_detailed(
+        uuid=uuid,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
+    uuid: str,
     *,
-    client: AuthenticatedClient,
-) -> Response[ConsumersResponse]:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+) -> Response[ArticleResponse | HTTPValidationError]:
+    """Article
+
+    Args:
+        uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ConsumersResponse]
+        Response[ArticleResponse | HTTPValidationError]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        uuid=uuid,
+    )
 
     response = await client.get_async_httpx_client().request(**kwargs)
 
@@ -104,21 +136,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    uuid: str,
     *,
-    client: AuthenticatedClient,
-) -> ConsumersResponse | None:
-    """Get Currently Logged Consumer
+    client: AuthenticatedClient | Client,
+) -> ArticleResponse | HTTPValidationError | None:
+    """Article
+
+    Args:
+        uuid (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ConsumersResponse
+        ArticleResponse | HTTPValidationError
     """
 
     return (
         await asyncio_detailed(
+            uuid=uuid,
             client=client,
         )
     ).parsed

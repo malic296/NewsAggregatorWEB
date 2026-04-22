@@ -15,12 +15,10 @@ class BaseResponse:
     Attributes:
         success (bool):
         message (str):
-        status_code (int):
     """
 
     success: bool
     message: str
-    status_code: int
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -28,15 +26,12 @@ class BaseResponse:
 
         message = self.message
 
-        status_code = self.status_code
-
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
                 "success": success,
                 "message": message,
-                "status_code": status_code,
             }
         )
 
@@ -49,12 +44,9 @@ class BaseResponse:
 
         message = d.pop("message")
 
-        status_code = d.pop("status_code")
-
         base_response = cls(
             success=success,
             message=message,
-            status_code=status_code,
         )
 
         base_response.additional_properties = d

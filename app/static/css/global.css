@@ -1,3 +1,43 @@
-.button.is-ghost:hover{
+/* Smooth transitions for theme switching */
+html, body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button.is-ghost:hover {
     text-decoration: none !important;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .button.is-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Modern Card Hover Effects */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Custom Scrollbar for modern look */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bulma-primary);
 }

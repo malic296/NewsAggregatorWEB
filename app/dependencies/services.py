@@ -1,5 +1,5 @@
-from app.models.service_container import ServiceContainer
-from app.services import ArticlesService, ChannelsService, LikesService, ConsumersService
+from app.models import ServiceContainer
+from app.services import ArticlesService, ChannelsService, ConsumersService
 from flask import request
 from app.api_client.client import AuthenticatedClient, Client
 
@@ -20,7 +20,6 @@ def get_services() -> ServiceContainer:
     services = ServiceContainer(
         articles=ArticlesService(client),
         channels=ChannelsService(client),
-        likes=LikesService(client),
         consumers=ConsumersService(client)
     )
 

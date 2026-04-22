@@ -8,7 +8,7 @@ from .body_login import BodyLogin
 from .channel_dto import ChannelDTO
 from .channels_response import ChannelsResponse
 from .consumer_dto import ConsumerDTO
-from .consumers_response import ConsumersResponse
+from .consumer_response import ConsumerResponse
 from .http_validation_error import HTTPValidationError
 from .like_response import LikeResponse
 from .registration_dto import RegistrationDTO
@@ -26,7 +26,7 @@ __all__ = (
     "ChannelDTO",
     "ChannelsResponse",
     "ConsumerDTO",
-    "ConsumersResponse",
+    "ConsumerResponse",
     "HTTPValidationError",
     "LikeResponse",
     "RegistrationDTO",

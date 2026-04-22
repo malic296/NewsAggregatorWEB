@@ -10,23 +10,21 @@ if TYPE_CHECKING:
     from ..models.consumer_dto import ConsumerDTO
 
 
-T = TypeVar("T", bound="ConsumersResponse")
+T = TypeVar("T", bound="ConsumerResponse")
 
 
 @_attrs_define
-class ConsumersResponse:
+class ConsumerResponse:
     """
     Attributes:
         success (bool):
         message (str):
-        status_code (int):
-        consumers (list[ConsumerDTO]):
+        consumer (ConsumerDTO):
     """
 
     success: bool
     message: str
-    status_code: int
-    consumers: list[ConsumerDTO]
+    consumer: ConsumerDTO
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -34,12 +32,7 @@ class ConsumersResponse:
 
         message = self.message
 
-        status_code = self.status_code
-
-        consumers = []
-        for consumers_item_data in self.consumers:
-            consumers_item = consumers_item_data.to_dict()
-            consumers.append(consumers_item)
+        consumer = self.consumer.to_dict()
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -47,8 +40,7 @@ class ConsumersResponse:
             {
                 "success": success,
                 "message": message,
-                "status_code": status_code,
-                "consumers": consumers,
+                "consumer": consumer,
             }
         )
 
@@ -63,24 +55,16 @@ class ConsumersResponse:
 
         message = d.pop("message")
 
-        status_code = d.pop("status_code")
+        consumer = ConsumerDTO.from_dict(d.pop("consumer"))
 
-        consumers = []
-        _consumers = d.pop("consumers")
-        for consumers_item_data in _consumers:
-            consumers_item = ConsumerDTO.from_dict(consumers_item_data)
-
-            consumers.append(consumers_item)
-
-        consumers_response = cls(
+        consumer_response = cls(
             success=success,
             message=message,
-            status_code=status_code,
-            consumers=consumers,
+            consumer=consumer,
         )
 
-        consumers_response.additional_properties = d
-        return consumers_response
+        consumer_response.additional_properties = d
+        return consumer_response
 
     @property
     def additional_keys(self) -> list[str]:

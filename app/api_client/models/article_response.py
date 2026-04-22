@@ -19,13 +19,11 @@ class ArticleResponse:
     Attributes:
         success (bool):
         message (str):
-        status_code (int):
         article (ArticleDTO | None):
     """
 
     success: bool
     message: str
-    status_code: int
     article: ArticleDTO | None
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -35,8 +33,6 @@ class ArticleResponse:
         success = self.success
 
         message = self.message
-
-        status_code = self.status_code
 
         article: dict[str, Any] | None
         if isinstance(self.article, ArticleDTO):
@@ -50,7 +46,6 @@ class ArticleResponse:
             {
                 "success": success,
                 "message": message,
-                "status_code": status_code,
                 "article": article,
             }
         )
@@ -65,8 +60,6 @@ class ArticleResponse:
         success = d.pop("success")
 
         message = d.pop("message")
-
-        status_code = d.pop("status_code")
 
         def _parse_article(data: object) -> ArticleDTO | None:
             if data is None:
@@ -86,7 +79,6 @@ class ArticleResponse:
         article_response = cls(
             success=success,
             message=message,
-            status_code=status_code,
             article=article,
         )
 
